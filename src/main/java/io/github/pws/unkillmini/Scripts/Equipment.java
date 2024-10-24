@@ -12,7 +12,7 @@ import io.github.pws.unkillmini.rendering.ConsoleColors;
 import io.github.pws.unkillmini.rendering.Window;
 import io.github.pws.unkillmini.run.Aplication;
 
-public class Inventory extends Aplication
+public class Equipment extends Aplication
 {
     private String button =
     """

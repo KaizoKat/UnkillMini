@@ -10,6 +10,7 @@ public class Window
     public static String pixels[][];
     public static String pixelsColor[][];
     public static String pixelsBackground[][];
+    private static String suffix = "";
     
     public static final void compose()
     {
@@ -60,7 +61,7 @@ public class Window
             }
         }
     }
-    
+
     public static final void print()
     {
         StringBuilder sb = new StringBuilder();
@@ -71,7 +72,9 @@ public class Window
                 sb.append(pixelsColor[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]).append(ConsoleColors.RESET);
             }
         }
+        sb.append(suffix);
         System.out.println(sb.toString());
+        suffix = "";
         System.out.flush();
     }
     
@@ -91,5 +94,10 @@ public class Window
     {
         clear();
         print();
+    }
+    
+    public static void appendToSuffix(String _suffix)
+    {
+        suffix += "\n" + _suffix;
     }
 }
