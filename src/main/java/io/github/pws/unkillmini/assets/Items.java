@@ -10,13 +10,4 @@ import io.github.pws.unkillmini.Program.backbone.Item;
 public class Items 
 {
     public static final Item apple = new Item("Apple", "Just an apple", 7,new Apple());
-    
-    public static Item[] list()
-    {
-        Item[] i = {
-            apple
-        };
-        
-        return i;
-    }
 }

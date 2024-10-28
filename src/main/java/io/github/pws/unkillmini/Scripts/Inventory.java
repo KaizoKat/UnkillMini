@@ -147,8 +147,7 @@ public class Inventory extends ScriptableNode
             Window.populateWithPixels(ray, 3, 14 + i);
         }
         
-        if (items.toArray().length < 12)
-            return;
+        if (items.toArray().length < 12) return;
         
         if (itemPage == 0)
         {
