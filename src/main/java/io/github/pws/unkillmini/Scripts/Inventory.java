@@ -4,7 +4,6 @@
  */
 package io.github.pws.unkillmini.Scripts;
 
-import io.github.pws.unkillmini.Assets.Items;
 import io.github.pws.unkillmini.Assets.Sprites.spr_inventory;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
@@ -22,7 +21,7 @@ public class Inventory extends ScriptableNode
     int itemPage = 0;
     String[][] ray;
     
-    public static List<Item> items = new ArrayList<Item>();
+    public static List<Item> items = new ArrayList<>();
     
     @Override
     public void start() 
