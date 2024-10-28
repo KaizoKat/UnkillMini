@@ -83,7 +83,7 @@ echo ---------------------------------------Starting Engine---------------------
 cls
 
 :: Run the main class from the bin directory, including external libraries
-java -cp "%BIN_DIR%;%CLASSPATH%" io.github.pws.unkillmini.run.Aplication
+java -cp "%BIN_DIR%;%CLASSPATH%" io.github.pws.unkillmini.Program.Aplication
 
 if %ERRORLEVEL% neq 0 (
     echo Execution failed. Aborting.

@@ -1,10 +1,11 @@
 package io.github.pws.unkillmini.Scripts;
 
-import io.github.pws.unkillmini.backbone.Input;
-import io.github.pws.unkillmini.rendering.Window;
-import io.github.pws.unkillmini.run.Aplication;
+import io.github.pws.unkillmini.Program.Aplication;
+import io.github.pws.unkillmini.Program.backbone.Input;
+import io.github.pws.unkillmini.Program.rendering.Window;
+import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 
-public class Help extends Aplication
+public class Help extends ScriptableNode
 { 
     
     @Override
@@ -71,6 +72,27 @@ public class Help extends Aplication
                     Window.appendToSuffix("Write help commands to display all the commands that you can write. (at the moment this doesnt work.)");
                 }
             }
+        }
+        else if(Input.Contains(Commands.index[10]))
+        {
+            if(Inventory.open == true && Equipment.open == true)
+            {
+                Inventory.open = false;
+                Equipment.open = false;
+            } 
+            else if(Inventory.open == false && Equipment.open == false)
+            {
+                Inventory.open = true;
+                Equipment.open = true;
+            }
+            else if(!Inventory.open) 
+                Inventory.open = true;
+            else if(!Equipment.open)
+                Equipment.open = true;
+        }
+        else if(Input.Contains(Commands.index[11]))
+        {
+            Aplication.run = false;
         }
     }
 

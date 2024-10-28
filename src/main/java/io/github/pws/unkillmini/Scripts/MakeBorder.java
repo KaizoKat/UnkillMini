@@ -1,19 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package io.github.pws.unkillmini.Scripts;
 
-import io.github.pws.unkillmini.backbone.SpriteFormatting;
-import io.github.pws.unkillmini.rendering.ConsoleColors;
-import io.github.pws.unkillmini.rendering.Window;
-import io.github.pws.unkillmini.run.Aplication;
-
-/**
- *
- * @author circi
- */
-public class MakeBorder extends Aplication
+import io.github.pws.unkillmini.Program.backbone.SpriteFormatting;
+import io.github.pws.unkillmini.Program.rendering.ConsoleColors;
+import io.github.pws.unkillmini.Program.rendering.Window;
+import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+public class MakeBorder extends ScriptableNode
 {   
         private String border = 
     """

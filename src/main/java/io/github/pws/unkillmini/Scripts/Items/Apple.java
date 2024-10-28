@@ -1,20 +1,18 @@
 package io.github.pws.unkillmini.Scripts.Items;
 
-import io.github.pws.unkillmini.run.Aplication;
-
-public class Apple extends Aplication
+import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.rendering.Window;
+public class Apple extends ScriptableNode
 {
-
     @Override
     public void start() 
     {
-        System.out.println("Apple");
     }
 
     @Override
     public void update() 
-    
     {
+        Window.appendToSuffix("Apple!");
     }
 
     @Override

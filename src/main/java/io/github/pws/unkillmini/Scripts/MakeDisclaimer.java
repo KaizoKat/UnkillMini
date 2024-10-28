@@ -1,12 +1,11 @@
 package io.github.pws.unkillmini.Scripts;
 
-import io.github.pws.unkillmini.backbone.SpriteFormatting;
-import io.github.pws.unkillmini.rendering.ConsoleColors;
-import io.github.pws.unkillmini.rendering.Window;
-import io.github.pws.unkillmini.run.Aplication;
-import java.io.IOException;
+import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.SpriteFormatting;
+import io.github.pws.unkillmini.Program.rendering.ConsoleColors;
+import io.github.pws.unkillmini.Program.rendering.Window;
 
-public class MakeDisclaimer extends Aplication
+public class MakeDisclaimer extends ScriptableNode
 {   
     private String disclaimer = 
     """

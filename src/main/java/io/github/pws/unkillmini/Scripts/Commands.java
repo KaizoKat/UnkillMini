@@ -11,6 +11,10 @@ public class Commands
         ">>",       //4
         "<<",       //5
         "use",      //6
-        "desc"      //7
+        "desc",     //7
+        "eqip",     //8
+        "select",   //9
+        "tab",      //10
+        "end",      //11
     };
 }
