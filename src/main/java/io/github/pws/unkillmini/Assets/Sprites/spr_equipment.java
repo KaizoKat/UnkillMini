@@ -11,14 +11,14 @@ public class spr_equipment extends Sprite
     #---------------------------------------------------------#
     """;
     
-    public static final  String buttonPressed =
+    public static final String buttonPressed =
     """
     >>                                                       <<
     >>                       Equipment                       <<
     >>=======================================================<<
     """;
     
-    public static final  String box =
+    public static final String box =
     """
     ###########################################################
     |                                                         |
@@ -36,5 +36,25 @@ public class spr_equipment extends Sprite
     |                                                         |
     |                                                         |
     ###########################################################
+    """;
+    
+    public static final String inspector =
+    """
+    ########################
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    |                      |
+    ########################
     """;
 }

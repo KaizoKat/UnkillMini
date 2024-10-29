@@ -23,12 +23,12 @@ public class Equipment extends ScriptableNode
     @Override
     public void update() 
     {
-        if(Input.Is(Commands.index[8])) 
+        if(Input.Contains(Commands.equipment))
         {
             open = !open;
         }
 
-        if(Input.Is(Commands.index[9] + " " + "debug"))
+        if(Input.Contains(Commands.use + " " + "debug"))
         {
             Window.appendToSuffix("No functionality.");
         }

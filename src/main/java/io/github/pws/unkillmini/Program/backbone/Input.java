@@ -12,13 +12,12 @@ public class Input
         line = scan.nextLine();
     }
     
-    public static boolean Is(String word)
-    {
-        return line.toUpperCase().equals(word.toUpperCase());
-    }
-    
     public static boolean Contains(String word)
     {
-        return line.toUpperCase().contains(word.toUpperCase());
+        boolean check = false;
+        if(line.length() != 0)
+            check = word.toUpperCase().contains(line.toUpperCase());
+        
+        return check;
     }
 }

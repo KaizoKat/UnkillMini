@@ -17,7 +17,7 @@ public class Help extends ScriptableNode
     @Override
     public void update()
     {
-        if(Input.Contains(Commands.index[0]))
+        if(Input.Contains(Commands.help))
         {
             Window.appendToSuffix("-HELP-------------");
             String[] broken = Input.line.split(" ");
@@ -29,51 +29,45 @@ public class Help extends ScriptableNode
                 return;
             }
             
-            switch (broken[1])
+            if(Commands.inventory.contains(broken[1])) // inventory
             {
-                case "inv" ->
+                if(broken.length == 2)
+                    Window.appendToSuffix("Opens the invenrory");
+                else
                 {
-                    if(broken.length == 2)
-                        Window.appendToSuffix("Opens the invenrory");
-                    else
-                    {
-                        if(broken[3].equals(">>"))
-                            Window.appendToSuffix("Goes to the next page in the inventory if it exists.");
-                        else if(broken[3].equals("<<"))
-                            Window.appendToSuffix("Goes to the previous page in the inventory if it exists.");
-                    }
-                }
-                case ">>" ->                
-                {
-                    Window.appendToSuffix("Goes to the next page in the inventory if it exists and if the inventory is open");
-                }
-                case "<<" ->                
-                {
-                    Window.appendToSuffix("Goes to the previous pabge in the inventory if it exists and if the inventory is open.");
-                }
-                case "use" ->                
-                {
-                    Window.appendToSuffix( "Uses the item specified. Just write 'use' + the name of the item.");
-                }
-                case "desc" ->
-                {
-                    Window.appendToSuffix("Displays the description of the specified item. Just write 'desc' + the name of the item.");
-                }
-                case "commands" ->
-                {
-                    for (String command : Commands.index)
-                    {
-                        Window.appendToSuffix(command);
-                    }
-                }
-                default ->
-                {
-                    Window.appendToSuffix("Displays all the commands. jsut write 'help' followed by the command that you want to check.");
-                    Window.appendToSuffix("Write help commands to display all the commands that you can write. (at the moment this doesnt work.)");
+                    if(broken[3].equals(">>"))
+                        Window.appendToSuffix("Goes to the next page in the inventory if it exists.");
+                    else if(broken[3].equals("<<"))
+                        Window.appendToSuffix("Goes to the previous page in the inventory if it exists.");
                 }
             }
+            else if(Commands.inv_Next.contains(broken[1])) // >>
+            {
+                Window.appendToSuffix("Goes to the next page in the inventory if it exists and if the inventory is open");
+            }
+            else if(Commands.inv_Prev.contains(broken[1])) // <<
+            {
+                Window.appendToSuffix("Goes to the previous pabge in the inventory if it exists and if the inventory is open.");
+            }
+            else if(Commands.use.contains(broken[1])) // use
+            {
+                Window.appendToSuffix( "Uses the item specified. Just write 'use' + the name of the item.");
+            }
+            else if(Commands.description.contains(broken[1])) // description
+            {
+                Window.appendToSuffix("Displays the description of the specified item. Just write 'desc' + the name of the item.");
+            }
+            else if(Commands.commands.contains(broken[1])) // commands
+            {
+                Window.appendToSuffix("not implemented");
+            }
+            else
+            {
+                Window.appendToSuffix("Displays all the commands. jsut write 'help' followed by the command that you want to check.");
+                Window.appendToSuffix("Write help commands to display all the commands that you can write. (at the moment this doesnt work.)");
+            }
         }
-        else if(Input.Contains(Commands.index[10]))
+        else if(Input.Contains(Commands.tab))
         {
             if(Inventory.open == true && Equipment.open == true)
             {
@@ -90,7 +84,7 @@ public class Help extends ScriptableNode
             else if(!Equipment.open)
                 Equipment.open = true;
         }
-        else if(Input.Contains(Commands.index[11]))
+        else if(Input.Contains(Commands.end))
         {
             Aplication.run = false;
         }

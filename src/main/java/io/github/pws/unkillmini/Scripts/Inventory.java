@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Inventory extends ScriptableNode
 {
-    public static boolean open = false;
+    public static boolean open = true;
     int itemPage = 0;
     String[][] ray;
     
@@ -32,34 +32,35 @@ public class Inventory extends ScriptableNode
     @Override
     public void update() 
     {
-        if(Input.Is(Commands.index[1])) 
+        if(Input.Contains(Commands.inventory)) 
         {
             open = !open;
         }
+        
         if(items.toArray().length/12 != 0)
         {
-            if(Input.Is(Commands.index[2]) || (open && Input.Is(Commands.index[4])))
+            if(open && Input.Contains(Commands.inv_Next))
             {
                 itemPage++;
             }
-            else if(Input.Is(Commands.index[3]) || (open && Input.Is(Commands.index[5])))
+            else if(open && Input.Contains(Commands.inv_Prev))
             {
                 itemPage--;
             }
-            else if(Input.Contains(Commands.index[1]) && Input.line.toCharArray().length > 3)
+            else if(Input.Contains(Commands.inventory) && Input.line.split(" ").length == 2)
             {
                 open = true;
-                try { itemPage = Integer.parseInt(Input.line.substring(4));
+                try { itemPage = Integer.parseInt(Input.line.split(" ")[1]);
                 } catch (NumberFormatException e) {}
             }
         }
         
-        if(itemPage > items.toArray().length/12) itemPage = items.toArray().length/12;
+        if(itemPage > (items.toArray().length/12) -1) itemPage = (items.toArray().length/12) -1;
         else if(itemPage < 0) itemPage = 0;
         
         for (int i = 0; i < items.toArray().length; i++)
         {
-            if(Input.Is(Commands.index[6] + " " + items.get(i).name))
+            if(Input.Contains(Commands.use + " " + items.get(i).name))
             {
                 if(items.get(i).count >= 1)
                 {
@@ -70,7 +71,7 @@ public class Inventory extends ScriptableNode
                 }
                 break;
             }
-            else if(Input.Is(Commands.index[7] + " " + items.get(i).name))
+            else if(Input.Contains(Commands.description + " " + items.get(i).name))
             {
                 Window.appendToSuffix("-Description " + items.get(i).name + "---");
                 Window.appendToSuffix(items.get(i).name + ": " + items.get(i).description);
@@ -115,25 +116,34 @@ public class Inventory extends ScriptableNode
     private void addInitialInventory()
     {
         items.add(new Item("Apple", "Just an apple", 3,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 4,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 1,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 12,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 5,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 31,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 12,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 5,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 8,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 10,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 7,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 1,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 3,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 4,new Apple()));
-        items.add(new Item("Apple", "Just an apple", 5,new Apple()));
+        items.add(new Item("Bean", "Just an apple", 4,new Apple()));
+        items.add(new Item("Crab", "Just an apple", 1,new Apple()));
+        items.add(new Item("Dust", "Just an apple", 12,new Apple()));
+        items.add(new Item("Elephant", "Just an apple", 5,new Apple()));
+        items.add(new Item("Fork", "Just an apple", 31,new Apple()));
+        items.add(new Item("Ghost", "Just an apple", 7,new Apple()));
+        items.add(new Item("Horse", "Just an apple", 19,new Apple()));
+        items.add(new Item("Isaac", "Just an apple", 12,new Apple()));
+        items.add(new Item("Jumper", "Just an apple", 5,new Apple()));
+        items.add(new Item("Kale", "Just an apple", 8,new Apple()));
+        items.add(new Item("Light", "Just an apple", 10,new Apple()));
+        items.add(new Item("Mutton", "Just an apple", 7,new Apple()));
+        items.add(new Item("Note", "Just an apple", 1,new Apple()));
+        items.add(new Item("Orange", "Just an apple", 29,new Apple()));
+        items.add(new Item("Piano", "Just an apple", 15,new Apple()));
+        items.add(new Item("Qween", "Just an apple", 3,new Apple()));
+        items.add(new Item("Rabbit", "Just an apple", 4,new Apple()));
+        items.add(new Item("Saber", "Just an apple", 1,new Apple()));
+        items.add(new Item("Telephone", "Just an apple", 12,new Apple()));
+        items.add(new Item("Ubercharge", "Just an apple", 5,new Apple()));
+        items.add(new Item("Vat of acid", "Just an apple", 31,new Apple()));
+        items.add(new Item("Word", "Just an apple", 12,new Apple()));
+        items.add(new Item("X coordinate", "Just an apple", 5,new Apple()));
     }
     
     private void fillInventory()
     {
-        int pageCount = items.toArray().length/12;
+        int pageCount = (items.toArray().length/12) -1;
         int max = items.toArray().length - (itemPage * 12);
         
         if (itemPage < pageCount)
@@ -143,24 +153,24 @@ public class Inventory extends ScriptableNode
         
         for (int i = 0; i < max; i++)
         {
-            ray = SpriteFormatting.PopulateWith(items.get(i).count + " " + items.get(i).name);
+            ray = SpriteFormatting.PopulateWith(items.get((itemPage * 12) + i).count + " " + items.get((itemPage * 12) + i).name);
             Window.populateWithPixels(ray, 3, 14 + i);
         }
         
-        if (items.toArray().length < 12) return;
+        if (pageCount == 0) 
+            return;
         
         if (itemPage == 0)
         {
-            ray = SpriteFormatting.PopulateWith("|      page  "+ itemPage +"    >> |");
-            
+            ray = SpriteFormatting.PopulateWith("|      page  "+ (itemPage + 1) +"    >> |");
         }
         else if (itemPage == pageCount)
         {
-            ray = SpriteFormatting.PopulateWith("| <<   page  "+ itemPage +"       |");
+            ray = SpriteFormatting.PopulateWith("| <<   page  "+ (itemPage + 1) +"       |");
         }
         else 
         {
-            ray = SpriteFormatting.PopulateWith("| <<   page  "+ itemPage +"    >> |");
+            ray = SpriteFormatting.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
         }
         
         Window.populateWithPixels(ray, 1, 26);

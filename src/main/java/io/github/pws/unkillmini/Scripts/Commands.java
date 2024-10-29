@@ -2,19 +2,14 @@ package io.github.pws.unkillmini.Scripts;
 
 public class Commands 
 {
-    public static final String[] index =
-    {
-        "help",     //0
-        "inv",      //1
-        "inv >>",   //2
-        "inv <<",   //3
-        ">>",       //4
-        "<<",       //5
-        "use",      //6
-        "desc",     //7
-        "eqip",     //8
-        "select",   //9
-        "tab",      //10
-        "end",      //11
-    };
+    public static final String help = "help";
+    public static final String inventory = "inventory";
+    public static final String inv_Next = ">>";
+    public static final String inv_Prev = "<<";
+    public static final String use = "use";
+    public static final String description = "description";
+    public static final String commands = "commands";
+    public static final String equipment = "eqiopment";
+    public static final String tab = "tab";
+    public static final String end = "end";
 }
