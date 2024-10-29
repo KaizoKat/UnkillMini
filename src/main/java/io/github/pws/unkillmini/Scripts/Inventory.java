@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Inventory extends ScriptableNode
 {
-    public static boolean open = true;
+    public static boolean open = false;
     int itemPage = 0;
     String[][] ray;
     
@@ -34,7 +34,41 @@ public class Inventory extends ScriptableNode
     {
         if(Input.Contains(Commands.inventory)) 
         {
-            open = !open;
+            if(Input.line.split(" ").length == 1)
+                open = !open;
+            
+            for (int i = 0; i < items.toArray().length; i++)
+            {
+                if(Input.Contains(Commands.use + " " + items.get(i).name))
+                {
+                    if(items.get(i).stats.count >= 1 && items.get(i).itemType == Item.Type.inventory)
+                    {
+                        Item it = items.get(i);
+                        it.runner.update();
+                        it.stats.count--;
+                        items.set(i, it);
+                    }
+                    else if(items.get(i).itemType == Item.Type.inventory)
+                    {
+                        Item it = items.get(i);
+                        it.stats.count--;
+                        if(Equipment.equippedItems[it.stats.equipmentSlot] == null)
+                            Equipment.equippedItems[it.stats.equipmentSlot] = it;
+                        else
+                        {
+                            
+                        }
+                        items.set(i, it);
+                    }
+                    break;
+                }
+                else if(Input.Contains(Commands.check + " " + items.get(i).name))
+                {
+                    Window.appendToSuffix("-Description " + items.get(i).name + "---");
+                    Window.appendToSuffix(items.get(i).name + ": " + items.get(i).description);
+                    break;
+                }
+            }
         }
         
         if(items.toArray().length/12 != 0)
@@ -58,29 +92,9 @@ public class Inventory extends ScriptableNode
         if(itemPage > (items.toArray().length/12) -1) itemPage = (items.toArray().length/12) -1;
         else if(itemPage < 0) itemPage = 0;
         
+
         for (int i = 0; i < items.toArray().length; i++)
-        {
-            if(Input.Contains(Commands.use + " " + items.get(i).name))
-            {
-                if(items.get(i).count >= 1)
-                {
-                    Item it = items.get(i);
-                    it.runner.update();
-                    it.count--;
-                    items.set(i, it);
-                }
-                break;
-            }
-            else if(Input.Contains(Commands.description + " " + items.get(i).name))
-            {
-                Window.appendToSuffix("-Description " + items.get(i).name + "---");
-                Window.appendToSuffix(items.get(i).name + ": " + items.get(i).description);
-                break;
-            }
-        }
-        
-        for (int i = 0; i < items.toArray().length; i++)
-            if(items.get(i).count == 0)
+            if(items.get(i).stats.count == 0)
                 items.remove(i);
         
         spr_inventory.x = 1;
@@ -115,30 +129,6 @@ public class Inventory extends ScriptableNode
     
     private void addInitialInventory()
     {
-        items.add(new Item("Apple", "Just an apple", 3,new Apple()));
-        items.add(new Item("Bean", "Just an apple", 4,new Apple()));
-        items.add(new Item("Crab", "Just an apple", 1,new Apple()));
-        items.add(new Item("Dust", "Just an apple", 12,new Apple()));
-        items.add(new Item("Elephant", "Just an apple", 5,new Apple()));
-        items.add(new Item("Fork", "Just an apple", 31,new Apple()));
-        items.add(new Item("Ghost", "Just an apple", 7,new Apple()));
-        items.add(new Item("Horse", "Just an apple", 19,new Apple()));
-        items.add(new Item("Isaac", "Just an apple", 12,new Apple()));
-        items.add(new Item("Jumper", "Just an apple", 5,new Apple()));
-        items.add(new Item("Kale", "Just an apple", 8,new Apple()));
-        items.add(new Item("Light", "Just an apple", 10,new Apple()));
-        items.add(new Item("Mutton", "Just an apple", 7,new Apple()));
-        items.add(new Item("Note", "Just an apple", 1,new Apple()));
-        items.add(new Item("Orange", "Just an apple", 29,new Apple()));
-        items.add(new Item("Piano", "Just an apple", 15,new Apple()));
-        items.add(new Item("Qween", "Just an apple", 3,new Apple()));
-        items.add(new Item("Rabbit", "Just an apple", 4,new Apple()));
-        items.add(new Item("Saber", "Just an apple", 1,new Apple()));
-        items.add(new Item("Telephone", "Just an apple", 12,new Apple()));
-        items.add(new Item("Ubercharge", "Just an apple", 5,new Apple()));
-        items.add(new Item("Vat of acid", "Just an apple", 31,new Apple()));
-        items.add(new Item("Word", "Just an apple", 12,new Apple()));
-        items.add(new Item("X coordinate", "Just an apple", 5,new Apple()));
     }
     
     private void fillInventory()
@@ -153,7 +143,7 @@ public class Inventory extends ScriptableNode
         
         for (int i = 0; i < max; i++)
         {
-            ray = SpriteFormatting.PopulateWith(items.get((itemPage * 12) + i).count + " " + items.get((itemPage * 12) + i).name);
+            ray = SpriteFormatting.PopulateWith(items.get((itemPage * 12) + i).stats.count + " " + items.get((itemPage * 12) + i).name);
             Window.populateWithPixels(ray, 3, 14 + i);
         }
         
@@ -183,7 +173,7 @@ public class Inventory extends ScriptableNode
         {
             if(i.equals(it) && i.runner == it.runner)
             {
-                i.count += it.count;
+                i.stats.count += it.stats.count;
             }
             else
             {

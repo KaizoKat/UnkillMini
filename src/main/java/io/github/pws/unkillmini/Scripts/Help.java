@@ -53,7 +53,7 @@ public class Help extends ScriptableNode
             {
                 Window.appendToSuffix( "Uses the item specified. Just write 'use' + the name of the item.");
             }
-            else if(Commands.description.contains(broken[1])) // description
+            else if(Commands.check.contains(broken[1])) // description
             {
                 Window.appendToSuffix("Displays the description of the specified item. Just write 'desc' + the name of the item.");
             }

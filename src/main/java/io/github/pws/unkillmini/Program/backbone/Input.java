@@ -14,10 +14,13 @@ public class Input
     
     public static boolean Contains(String word)
     {
-        boolean check = false;
-        if(line.length() != 0)
-            check = word.toUpperCase().contains(line.toUpperCase());
+        for(String part : line.split(" "))
+        {
+            if(part.length() != 0 && word.toUpperCase().contains(part.toUpperCase()))
+                return true;
+        }
+
         
-        return check;
+        return false;
     }
 }

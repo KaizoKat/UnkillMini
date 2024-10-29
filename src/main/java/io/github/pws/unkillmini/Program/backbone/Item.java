@@ -1,23 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package io.github.pws.unkillmini.Program.backbone;
+
+
 
 public class Item
 {
     public String name;
     public String description;
-    public int count;
+    public Stats stats;
     public ScriptableNode runner;
-
-    public Item(String name, String description, int count, ScriptableNode runner)
+    public Type itemType = Type.none;
+    
+    public enum Type 
+    {
+        none,
+        inventory,
+        equipment
+    }
+    
+    public Item(String name, String description, Stats stats, Type itemType, ScriptableNode runner)
     {
         this.name = name;
         this.description = description;
-        this.count = count;
+        this.stats = stats;
         this.runner = runner;
+        this.itemType = itemType;
     }
     
-    
+    public static class Stats
+    {
+        public int count = 1;
+        public int equipmentSlot;
+        
+        public Stats(int count, int equipmentSlot)
+        {
+            this.count = count;
+            this.equipmentSlot = equipmentSlot;
+        }
+    }
 }
