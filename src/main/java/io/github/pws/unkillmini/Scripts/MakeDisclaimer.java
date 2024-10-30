@@ -5,7 +5,7 @@ import io.github.pws.unkillmini.Program.backbone.SpriteFormatting;
 import io.github.pws.unkillmini.Program.rendering.ConsoleColors;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
-public class MakeDisclaimer extends ScriptableNode
+public class MakeDisclaimer implements ScriptableNode
 {   
     private String disclaimer = 
     """

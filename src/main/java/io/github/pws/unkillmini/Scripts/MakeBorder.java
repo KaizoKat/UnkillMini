@@ -4,7 +4,7 @@ import io.github.pws.unkillmini.Program.backbone.SpriteFormatting;
 import io.github.pws.unkillmini.Program.rendering.ConsoleColors;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
-public class MakeBorder extends ScriptableNode
+public class MakeBorder implements ScriptableNode
 {   
         private String border = 
     """

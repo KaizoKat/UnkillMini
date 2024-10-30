@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package io.github.pws.unkillmini.Scripts;
 
 import io.github.pws.unkillmini.Assets.Sprites.spr_inventory;
@@ -11,11 +7,12 @@ import io.github.pws.unkillmini.Program.backbone.SpriteFormatting;
 import io.github.pws.unkillmini.Program.rendering.ConsoleColors;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
-import io.github.pws.unkillmini.Scripts.Items.Apple;
+import io.github.pws.unkillmini.assets.Items;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Inventory extends ScriptableNode
+public class Inventory implements ScriptableNode
 {
     public static boolean open = false;
     int itemPage = 0;
@@ -26,7 +23,7 @@ public class Inventory extends ScriptableNode
     @Override
     public void start() 
     {
-        addInitialInventory();
+        items = Items.list;
     }
 
     @Override
@@ -39,30 +36,36 @@ public class Inventory extends ScriptableNode
             
             for (int i = 0; i < items.toArray().length; i++)
             {
-                if(Input.Contains(Commands.use + " " + items.get(i).name))
+                Item it = items.get(i);
+                if(Input.Contains(Commands.use) && Input.Contains(it.name) && it.stats.count > 0)
                 {
-                    if(items.get(i).stats.count >= 1 && items.get(i).itemType == Item.Type.inventory)
+                    if(items.get(i).stats.equipmentSlots.equals(""))
                     {
-                        Item it = items.get(i);
                         it.runner.update();
                         it.stats.count--;
                         items.set(i, it);
                     }
-                    else if(items.get(i).itemType == Item.Type.inventory)
+                    else if(!items.get(i).stats.equipmentSlots.equals(""))
                     {
-                        Item it = items.get(i);
+                        Window.appendToSuffix(it.name + " equipped!");
                         it.stats.count--;
-                        if(Equipment.equippedItems[it.stats.equipmentSlot] == null)
-                            Equipment.equippedItems[it.stats.equipmentSlot] = it;
-                        else
+                        for(String slot : it.stats.equipmentSlots.split(" "))
                         {
-                            
+                            if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
+                            {
+                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                            }
+                            else
+                            {
+                                AddItem(Equipment.equippedItems[Integer.parseInt(slot)]);
+                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                            }
                         }
                         items.set(i, it);
                     }
                     break;
                 }
-                else if(Input.Contains(Commands.check + " " + items.get(i).name))
+                else if(Input.Contains(Commands.check) && Input.Contains(it.name))
                 {
                     Window.appendToSuffix("-Description " + items.get(i).name + "---");
                     Window.appendToSuffix(items.get(i).name + ": " + items.get(i).description);
@@ -71,7 +74,9 @@ public class Inventory extends ScriptableNode
             }
         }
         
-        if(items.toArray().length/12 != 0)
+        int pageCount = items.toArray().length/12;
+        
+        if(pageCount > 0)
         {
             if(open && Input.Contains(Commands.inv_Next))
             {
@@ -89,9 +94,11 @@ public class Inventory extends ScriptableNode
             }
         }
         
-        if(itemPage > (items.toArray().length/12) -1) itemPage = (items.toArray().length/12) -1;
-        else if(itemPage < 0) itemPage = 0;
-        
+        if(pageCount > 0)
+        {
+            if(itemPage > pageCount -1) itemPage = pageCount -1;
+            else if(itemPage < 0) itemPage = 0;
+        }
 
         for (int i = 0; i < items.toArray().length; i++)
             if(items.get(i).stats.count == 0)
@@ -127,13 +134,9 @@ public class Inventory extends ScriptableNode
     {
     }
     
-    private void addInitialInventory()
-    {
-    }
-    
     private void fillInventory()
     {
-        int pageCount = (items.toArray().length/12) -1;
+        int pageCount = items.toArray().length/12;
         int max = items.toArray().length - (itemPage * 12);
         
         if (itemPage < pageCount)
@@ -147,20 +150,20 @@ public class Inventory extends ScriptableNode
             Window.populateWithPixels(ray, 3, 14 + i);
         }
         
-        if (pageCount == 0) 
+        if (pageCount < 1)
             return;
         
         if (itemPage == 0)
         {
             ray = SpriteFormatting.PopulateWith("|      page  "+ (itemPage + 1) +"    >> |");
         }
-        else if (itemPage == pageCount)
+        else if(itemPage < pageCount -1)
         {
-            ray = SpriteFormatting.PopulateWith("| <<   page  "+ (itemPage + 1) +"       |");
+            ray = SpriteFormatting.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
         }
         else 
         {
-            ray = SpriteFormatting.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
+            ray = SpriteFormatting.PopulateWith("| <<   page  "+ (itemPage + 1) +"       |");
         }
         
         Window.populateWithPixels(ray, 1, 26);

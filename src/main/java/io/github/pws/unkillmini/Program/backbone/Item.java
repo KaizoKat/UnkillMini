@@ -8,33 +8,24 @@ public class Item
     public String description;
     public Stats stats;
     public ScriptableNode runner;
-    public Type itemType = Type.none;
     
-    public enum Type 
-    {
-        none,
-        inventory,
-        equipment
-    }
-    
-    public Item(String name, String description, Stats stats, Type itemType, ScriptableNode runner)
+    public Item(String name, String description, Stats stats,ScriptableNode runner)
     {
         this.name = name;
         this.description = description;
         this.stats = stats;
         this.runner = runner;
-        this.itemType = itemType;
     }
     
     public static class Stats
     {
         public int count = 1;
-        public int equipmentSlot;
+        public String equipmentSlots;
         
-        public Stats(int count, int equipmentSlot)
+        public Stats(int count, String equipmentSlots)
         {
             this.count = count;
-            this.equipmentSlot = equipmentSlot;
+            this.equipmentSlots = equipmentSlots;
         }
     }
 }

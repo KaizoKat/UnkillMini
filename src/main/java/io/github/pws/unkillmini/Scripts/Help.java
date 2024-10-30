@@ -5,7 +5,7 @@ import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 
-public class Help extends ScriptableNode
+public class Help implements ScriptableNode
 { 
     
     @Override
