@@ -12,7 +12,7 @@ public class Jumper implements ScriptableNode
     @Override
     public void update() 
     {
-        Window.appendToSuffix("used Jumper.");
+        Window.print("used Jumper.");
     }
 
     @Override

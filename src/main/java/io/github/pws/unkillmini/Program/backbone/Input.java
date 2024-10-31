@@ -7,12 +7,12 @@ public class Input
     public static String line = "";
     public static final Scanner scan = new Scanner(System.in);
     
-    public static void check()
+    public static void scan()
     {
         line = scan.nextLine();
     }
     
-    public static boolean Contains(String word)
+    public static boolean check(String word)
     {
         if(line.chars().count() >= 2)
         {

@@ -12,7 +12,7 @@ public class Qween implements ScriptableNode
     @Override
     public void update() 
     {
-        Window.appendToSuffix("used Qween.");
+        Window.print("used Qween.");
     }
 
     @Override

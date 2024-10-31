@@ -46,7 +46,7 @@ public class Aplication
     
     private static void UPDATE()
     {
-        Input.check();
+        Input.scan();
         border.update();
         help.update();
         inv.update();

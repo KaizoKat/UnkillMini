@@ -12,7 +12,7 @@ public class Kale implements ScriptableNode
     @Override
     public void update() 
     {
-        Window.appendToSuffix("used Kale.");
+        Window.print("used Kale.");
     }
 
     @Override

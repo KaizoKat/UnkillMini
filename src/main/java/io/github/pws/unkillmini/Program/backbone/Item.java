@@ -9,7 +9,7 @@ public class Item
     public Stats stats;
     public ScriptableNode runner;
     
-    public Item(String name, String description, Stats stats,ScriptableNode runner)
+    public Item(String name, String description, Stats stats, ScriptableNode runner)
     {
         this.name = name;
         this.description = description;

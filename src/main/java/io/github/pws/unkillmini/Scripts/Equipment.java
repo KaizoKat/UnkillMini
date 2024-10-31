@@ -8,15 +8,15 @@ import io.github.pws.unkillmini.Assets.Sprites.spr_equipment;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
-import io.github.pws.unkillmini.Program.rendering.ConsoleColors;
+import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Equipment implements ScriptableNode
 {
-    public static boolean open = true;
+    public static boolean open = false;
+    public static boolean charms = false;
     
     public static Item[] equippedItems = new Item[7];
-    
     @Override
     public void start() 
     {
@@ -25,168 +25,164 @@ public class Equipment implements ScriptableNode
     @Override
     public void update() 
     {
-        boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false, totems = false;
+        boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false;
         
-        if(Input.Contains(Commands.equipment))
+        if(Input.check(Commands.equipment))
         {
             if(Input.line.split(" ").length == 1)
                 open = !open;
             
-            if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("LEFT ARM"))
+            if(open && Input.check(Commands.check + " left arm"))
                 larm = true;
-            else if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("RIGHT ARM"))
+            else if(open && Input.check(Commands.check + " right arm"))
                 rarm = true;
-            else if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("LEGS"))
+            else if(open && Input.check(Commands.check + " legs"))
                 legs = true;    
-            else if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("CHEST"))
+            else if(open && Input.check(Commands.check + " chest"))
                 chest = true;
-            else if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("HEAD"))
+            else if(open && Input.check(Commands.check + " head"))
                 head = true;
-            else if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("WEAPON"))
+            else if(open && Input.check(Commands.check + " weapon"))
                 weapon = true;
-            else if(open && Input.Contains(Commands.check) && Input.line.toUpperCase().contains("TOTEMS"))
-                totems = true;
-            else if(open && Input.Contains(Commands.check))
+            else if(open && Input.check(Commands.check + " charms"))
+                charms = true;
+            else if(open && Input.check(Commands.check))
             {
-                Window.appendToSuffix("-Checks------------");
-                Window.appendToSuffix("left arm, right arm, chest, legs, head, weapon and totems");
+                Window.print("-Checks------------");
+                Window.print("left arm, right arm, chest, legs, head, weapon and charms");
             }
         }
         
         spr_equipment.x = 23;
         spr_equipment.y = 28;
-        spr_equipment.background = ConsoleColors.Background.GREEN;
-        
+        spr_equipment.background = Color.rgbBG(126, 167, 168);
+
         if(open)
         {
-            
             spr_equipment.pixels = spr_equipment.buttonPressed;
-            spr_equipment.foregorund = ConsoleColors.Foreground.WHITE;
+            spr_equipment.foregorund = Color.rgbFG(255, 255, 255);
             spr_equipment.populate();
             
             spr_equipment.y = 5;
-            spr_equipment.pixels = spr_equipment.box;
+            spr_equipment.pixels = spr_equipment.eqBorder;
             spr_equipment.populate();
+            
+            spr_equipment.x = 25;
+            spr_equipment.y = 7;
+            spr_equipment.pixels = spr_equipment.eqSlots;
+            spr_equipment.foregorund = Color.rgbFG(201, 212, 212);
+            spr_equipment.populate();
+            
+            char cBor = ' ';
+            String borderBG = Color.rgbBG(133, 185, 186);
+            String borderFG = Color.rgbFG(255, 255, 255);
+            
+            String selectBG = Color.rgbBG(133, 185, 186);
+            String selectFG = Color.rgbFG(255, 255, 255);
+
+            if(larm)
+            {
+                String area =     
+                """
+                *%@@@@@@@@@@&/
+                *%@@@@@@@@@@&/
+                *%@@@@@@@@@@&/
+                """;
+
+                selectArea(area, 65, 12, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendCheck(equippedItems[0], "left arm");
+            }
+            else if(rarm)
+            {
+                String area =
+                """
+                .(@@@@@@@@@@@#,
+                .(@@@@@@@@@@@#,
+                .(@@@@@@@@@@@#,
+                """;
+
+                selectArea(area, 27, 12, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendCheck(equippedItems[1], "right arm");
+            }
+            else if(legs)
+            {
+                String area =
+                """
+                *%@@@#,   *%@@@#,
+                *%@@@#,   *%@@@#,
+                *%@@@#,   *%@@@#,
+                *%@@@#,   *%@@@#,
+                *%@@@#,   *%@@@#,
+                *%@@@#,   *%@@@#,
+                """;
+
+                selectArea(area, 45, 21, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendCheck(equippedItems[2], "legs");
+            }
+            else if(chest)
+            {
+                String area =
+                """
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                *%@@@@@@@@@@@@@#,
+                """;
+
+                selectArea(area, 45, 12, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendCheck(equippedItems[3], "chest");
+            }
+            else if(head)
+            {
+                String area =
+                """
+                .(@@@@@@@@&/
+                .(@@@@@@@@&/
+                .(@@@@@@@@&/
+                .(@@@@@@@@&/
+                """;
+
+                selectArea(area, 47, 7, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendCheck(equippedItems[4], "head");
+            }
+            else if(weapon)
+            {
+                String area =
+                "           /&%*\n"+
+                "           /&%*\n"+
+                "        *%@@@%*\n"+
+                ".(@#,.(@@@@@@%*\n"+
+                ".(@@@@@@@@&/   \n"+
+                "   *%@@@#,     \n"+
+                ".(@#,.(@@@&/   \n";
+
+                selectArea(area, 67, 18, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendCheck(equippedItems[5], "weapon");
+            }
+            else if(charms)
+            {
+                String area =
+                "     *%&/     \n"+
+                "  .(@#,.(@#,  \n"+
+                "*%@@@#,.(@@@&/\n"+
+                "*%&/ *%&/ *%&/\n"+
+                "*%&/      *%&/\n"+
+                "  .(@#,.(@#,  \n"+
+                "     *%&/     \n";
+
+                selectArea(area, 25, 18, cBor, borderBG, borderFG, selectBG, selectFG);
+                appendTotem();
+            }
         }
         else 
         {
             spr_equipment.pixels = spr_equipment.button;
-            spr_equipment.foregorund = ConsoleColors.Foreground.GREEN;
+            spr_equipment.foregorund = Color.rgbFG(0, 0, 0);
             spr_equipment.populate();
-        }
-
-        if(larm)
-        {
-            String area =     
-            """
-            *%@@@@@@@@@@&/
-            *%@@@@@@@@@@&/
-            *%@@@@@@@@@@&/
-            """;
-
-            selectArea(area, 65, 12, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendCheck(equippedItems[0], "left arm");
-        }
-        else if(rarm)
-        {
-            String area =
-            """
-            .(@@@@@@@@@@@#,
-            .(@@@@@@@@@@@#,
-            .(@@@@@@@@@@@#,
-            """;
-
-            selectArea(area, 27, 12, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendCheck(equippedItems[1], "right arm");
-        }
-        else if(legs)
-        {
-            String area =
-            """
-            *%@@@#,   *%@@@#,
-            *%@@@#,   *%@@@#,
-            *%@@@#,   *%@@@#,
-            *%@@@#,   *%@@@#,
-            *%@@@#,   *%@@@#,
-            *%@@@#,   *%@@@#,
-            """;
-            
-            selectArea(area, 45, 21, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendCheck(equippedItems[2], "legs");
-        }
-        else if(chest)
-        {
-            String area =
-            """
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            *%@@@@@@@@@@@@@#,
-            """;
-
-            selectArea(area, 45, 12, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendCheck(equippedItems[3], "chest");
-        }
-        else if(head)
-        {
-            String area =
-            """
-            .(@@@@@@@@&/
-            .(@@@@@@@@&/
-            .(@@@@@@@@&/
-            .(@@@@@@@@&/
-            """;
-
-            selectArea(area, 47, 7, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendCheck(equippedItems[4], "head");
-        }
-
-        else if(weapon)
-        {
-            String area =
-            "           /&%*\n"+
-            "           /&%*\n"+
-            "        *%@@@%*\n"+
-            ".(@#,.(@@@@@@%*\n"+
-            ".(@@@@@@@@&/   \n"+
-            "   *%@@@#,     \n"+
-            ".(@#,.(@@@&/   \n";
-
-            selectArea(area, 67, 18, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendCheck(equippedItems[5], "weapon");
-        }
-
-        else if(totems)
-        {
-            String area =
-            "     *%&/     \n"+
-            "  .(@#,.(@#,  \n"+
-            "*%@@@#,.(@@@&/\n"+
-            "*%&/ *%&/ *%&/\n"+
-            "*%&/      *%&/\n"+
-            "  .(@#,.(@#,  \n"+
-            "     *%&/     \n";
-            
-            selectArea(area, 25, 18, '*',
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.CYAN, 
-            ConsoleColors.Background.CYAN, ConsoleColors.Foreground.WHITE);
-            appendTotem();
         }
     }
 
@@ -199,7 +195,7 @@ public class Equipment implements ScriptableNode
     {
         if(equippedItems[6] == null)
         {
-            Window.appendToSuffix("There are no currently equiped totems.");
+            Window.print("There are no currently equiped totems.");
         }
         else
         {
@@ -224,13 +220,21 @@ public class Equipment implements ScriptableNode
             """;
             
             selectArea(area, 51, 8, ' ', 
-            ConsoleColors.Background.BLACK, ConsoleColors.Foreground.BLACK, 
-            ConsoleColors.Background.GREEN, ConsoleColors.Foreground.WHITE);
+            Color.rgbBG(133, 185, 186), Color.rgbFG(0, 0, 0), 
+            Color.rgbBG(133, 185, 186), Color.rgbFG(255, 255, 255));
             /*
             it will add the item into an list of totems that works like the inventory items when the command is done.
             it will print an inventory right in the middle of the exquipment tab and will work just like the inventory,
             except with other commands and wi stay on as long as that command is not "eq. ch. totems" or another ch command
             */
+            if(open && !Input.check(Commands.check + " charms"))
+            {
+                
+            }
+            else if(open)
+            {
+                //chech for charm commands
+            }
         }
     }
     
@@ -238,11 +242,11 @@ public class Equipment implements ScriptableNode
     {
         if(it == null)
         {
-            Window.appendToSuffix("There is no currently equiped item on the " + slot);
+            Window.print("There is no currently equiped item on the " + slot);
         }
         else
         {
-            Window.appendToSuffix(it.name + " | " + it.description);
+            Window.print(it.name + " | " + it.description);
         }
     }
     

@@ -12,7 +12,7 @@ public class Apple implements ScriptableNode
     @Override
     public void update() 
     {
-        Window.appendToSuffix("used Apple.");
+        Window.print("used Apple.");
     }
 
     @Override

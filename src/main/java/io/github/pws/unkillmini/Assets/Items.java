@@ -21,7 +21,7 @@ public class Items
         add(new Item("Fork", "Use it as a weapon.", new Item.Stats(1,"5"),new Apple()));
         add(new Item("Ghost", "Boo!",  new Item.Stats(1,""),new Apple()));
         add(new Item("Horse", "Neigh",  new Item.Stats(1,""),new Apple()));
-        add(new Item("Isaac", "Isaac and his mother...",  new Item.Stats(1,""),new Apple()));
+        add(new Item("Isaac", "Isaac and his mother...",  new Item.Stats(1,"2 3"),new Apple()));
         add(new Item("Jumper", "Soft and flexible. Perfect for high movment tasks.",  new Item.Stats(1,"0 1 2 3"),new Jumper()));
         add(new Item("Kale", "The moost overpowered weapon in the universe.",  new Item.Stats(1,"5"),new Kale()));
         add(new Item("Light", "It exists, and you have it. I dont know why.",  new Item.Stats(99,"4"),new Apple()));

@@ -8,14 +8,14 @@ public class Window
     public static final int height = 32;
 
     public static String pixels[][];
-    public static String pixelsColor[][];
+    public static String[][] pixelsForeground;
     public static String pixelsBackground[][];
     private static String suffix = "";
     
     public static final void compose()
     {
         pixels = new String[height][width];
-        pixelsColor = new String[height][width];
+        pixelsForeground = new String[height][width];
         pixelsBackground = new String[height][width];
         
         for (int xx = 0; xx < pixels.length; xx++)
@@ -23,8 +23,8 @@ public class Window
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
                 pixels[xx][yy] = "";
-                pixelsColor[xx][yy] = ConsoleColors.Foreground.WHITE;
-                pixelsBackground[xx][yy] = ConsoleColors.Background.BLACK;
+                pixelsForeground[xx][yy] = Color.rgbFG(255, 255, 255);
+                pixelsBackground[xx][yy] = Color.rgbBG(0, 0, 0);
             }
         }
     }
@@ -40,13 +40,13 @@ public class Window
         }
     }
     
-    public static final void setPopulatorColor(String[][] populator, int posX, int posY, String color)
+    public static final void setPopulatorForeground(String[][] populator, int posX, int posY, String color)
     {
         for (int xx = 0; xx < populator.length; xx++)
         {
             for (int yy = 0; yy < populator[xx].length; yy++)
             {
-                pixelsColor[posY + xx][posX + yy] = color;
+                pixelsForeground[posY + xx][posX + yy] = color;
             }
         }
     }
@@ -62,14 +62,14 @@ public class Window
         }
     }
 
-    public static final void print()
+    public static final void draw()
     {
         StringBuilder sb = new StringBuilder();
         for (int xx = 0; xx < pixels.length; xx++)
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
-                sb.append(pixelsColor[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]).append(ConsoleColors.RESET);
+                sb.append(pixelsForeground[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]).append(Color.RESET);
             }
         }
         sb.append(suffix);
@@ -94,10 +94,10 @@ public class Window
     public static void refresh()
     {
         clear();
-        print();
+        draw();
     }
     
-    public static void appendToSuffix(String _suffix)
+    public static void print(String _suffix)
     {
         suffix += "\n" + _suffix;
     }

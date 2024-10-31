@@ -18,7 +18,7 @@ public class spr_inventory extends Sprite
     >>==================<<
     """;
     
-    public static final  String box =
+    public static final  String invBoder =
     """
     ######################
     |                    |
