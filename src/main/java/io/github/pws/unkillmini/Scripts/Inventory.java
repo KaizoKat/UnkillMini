@@ -7,7 +7,7 @@ import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
-import io.github.pws.unkillmini.assets.Items;
+import io.github.pws.unkillmini.Assets.Items;
 import java.util.ArrayList;
 import java.util.List;
 

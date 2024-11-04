@@ -41,7 +41,7 @@ public class Aplication
         Window.compose();
         disclaimer.start();
         inv.start();
-        Window.refresh();
+        Window.draw();
     }
     
     private static void UPDATE()
@@ -51,7 +51,7 @@ public class Aplication
         help.update();
         inv.update();
         equ.update();
-        Window.refresh();
+        Window.draw();
     }
     
     private static void END()

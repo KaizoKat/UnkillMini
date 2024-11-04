@@ -65,6 +65,7 @@ public class Window
     public static final void draw()
     {
         StringBuilder sb = new StringBuilder();
+        System.out.print("\033[1;1H");
         for (int xx = 0; xx < pixels.length; xx++)
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
@@ -72,6 +73,7 @@ public class Window
                 sb.append(pixelsForeground[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]).append(Color.RESET);
             }
         }
+
         sb.append(suffix);
         sb.append("\n> ");
         System.out.print(sb.toString());
@@ -89,12 +91,6 @@ public class Window
     {
         try { new ProcessBuilder("cmd", "/c", "PAUSE").inheritIO().start().waitFor();  
         } catch (IOException | InterruptedException e) {}
-    }
-    
-    public static void refresh()
-    {
-        clear();
-        draw();
     }
     
     public static void print(String _suffix)
