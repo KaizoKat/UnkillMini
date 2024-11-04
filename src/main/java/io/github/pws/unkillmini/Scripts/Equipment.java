@@ -27,24 +27,25 @@ public class Equipment implements ScriptableNode
     {
         boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false;
         
+        /*
         if(Input.check(Commands.equipment))
         {
             if(Input.line.split(" ").length == 1)
                 open = !open;
             
-            if(open && Input.check(Commands.check + " left arm"))
+            if(open && Input.check(Commands.check) && Input.check("left arm"))
                 larm = true;
-            else if(open && Input.check(Commands.check + " right arm"))
+            else if(open && Input.check(Commands.check) && Input.check( "right arm"))
                 rarm = true;
-            else if(open && Input.check(Commands.check + " legs"))
+            else if(open && Input.check(Commands.check) && Input.check("legs"))
                 legs = true;    
-            else if(open && Input.check(Commands.check + " chest"))
+            else if(open && Input.check(Commands.check) && Input.check("chest"))
                 chest = true;
-            else if(open && Input.check(Commands.check + " head"))
+            else if(open && Input.check(Commands.check) && Input.check("head"))
                 head = true;
-            else if(open && Input.check(Commands.check + " weapon"))
+            else if(open && Input.check(Commands.check) && Input.check("weapon"))
                 weapon = true;
-            else if(open && Input.check(Commands.check + " charms"))
+            else if(open && Input.check(Commands.check) && Input.check("charms"))
                 charms = true;
             else if(open && Input.check(Commands.check))
             {
@@ -52,15 +53,17 @@ public class Equipment implements ScriptableNode
                 Window.print("left arm, right arm, chest, legs, head, weapon and charms");
             }
         }
+        */
+
         
         spr_equipment.x = 23;
         spr_equipment.y = 28;
-        spr_equipment.background = Color.rgbBG(126, 167, 168);
+        spr_equipment.background = Color.rgb(126, 167, 168);
 
         if(open)
         {
             spr_equipment.pixels = spr_equipment.buttonPressed;
-            spr_equipment.foregorund = Color.rgbFG(255, 255, 255);
+            spr_equipment.foregorund = Color.rgb(255, 255, 255);
             spr_equipment.populate();
             
             spr_equipment.y = 5;
@@ -70,15 +73,15 @@ public class Equipment implements ScriptableNode
             spr_equipment.x = 25;
             spr_equipment.y = 7;
             spr_equipment.pixels = spr_equipment.eqSlots;
-            spr_equipment.foregorund = Color.rgbFG(201, 212, 212);
+            spr_equipment.foregorund = Color.rgb(201, 212, 212);
             spr_equipment.populate();
             
             char cBor = ' ';
-            String borderBG = Color.rgbBG(133, 185, 186);
-            String borderFG = Color.rgbFG(255, 255, 255);
+            String borderBG = Color.rgb(133, 185, 186);
+            String borderFG = Color.rgb(255, 255, 255);
             
-            String selectBG = Color.rgbBG(133, 185, 186);
-            String selectFG = Color.rgbFG(255, 255, 255);
+            String selectBG = Color.rgb(133, 185, 186);
+            String selectFG = Color.rgb(255, 255, 255);
 
             if(larm)
             {
@@ -181,7 +184,7 @@ public class Equipment implements ScriptableNode
         else 
         {
             spr_equipment.pixels = spr_equipment.button;
-            spr_equipment.foregorund = Color.rgbFG(0, 0, 0);
+            spr_equipment.foregorund = Color.rgb(0, 0, 0);
             spr_equipment.populate();
         }
     }
@@ -220,14 +223,14 @@ public class Equipment implements ScriptableNode
             """;
             
             selectArea(area, 51, 8, ' ', 
-            Color.rgbBG(133, 185, 186), Color.rgbFG(0, 0, 0), 
-            Color.rgbBG(133, 185, 186), Color.rgbFG(255, 255, 255));
+            Color.rgb(133, 185, 186), Color.rgb(0, 0, 0), 
+            Color.rgb(133, 185, 186), Color.rgb(255, 255, 255));
             /*
             it will add the item into an list of totems that works like the inventory items when the command is done.
             it will print an inventory right in the middle of the exquipment tab and will work just like the inventory,
             except with other commands and wi stay on as long as that command is not "eq. ch. totems" or another ch command
             */
-            if(open && !Input.check(Commands.check + " charms"))
+            if(open )//&& !Input.check(Commands.check + " charms"))
             {
                 
             }
@@ -250,6 +253,7 @@ public class Equipment implements ScriptableNode
         }
     }
     
+    @SuppressWarnings("unused")
     private static void selectArea(String area, int poX, int poY, char cBor, String borderBG, String borderFG, String selectBG, String selectFG)
     {
         String[] lamda = new String[area.split("\n").length + 2];

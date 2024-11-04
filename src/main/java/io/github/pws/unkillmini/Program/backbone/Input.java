@@ -1,27 +1,43 @@
 package io.github.pws.unkillmini.Program.backbone;
 
-import java.util.Scanner;
+import com.googlecode.lanterna.input.KeyStroke;
+import com.googlecode.lanterna.input.KeyType;
+
+import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Input 
 {
-    public static String line = "";
-    public static final Scanner scan = new Scanner(System.in);
-    
+    public static KeyStroke line;
+
     public static void scan()
     {
-        line = scan.nextLine();
-    }
-    
-    public static boolean check(String word)
-    {
-        if(line.chars().count() >= 2)
+        try 
         {
-            for(String part : line.split(" "))
-            {
-                if(part.length() != 0 && word.toUpperCase().contains(part.toUpperCase()))
-                    return true;
-            }
+            line = Window.terminal.readInput();
+        } 
+        catch (Exception e) {}
+    }
+
+    public static KeyStroke getInput()
+    {
+        try 
+        {
+            return Window.terminal.pollInput();
+        } 
+        catch (Exception e) 
+        {
+            return null;
         }
-        return false;
+    }
+
+    public static boolean isKeyPressed(KeyType keyType)
+    {
+        KeyStroke key = getInput();
+        return key != null && key.getKeyType() == keyType;
+    }
+
+    public static boolean isKeyPressed(KeyStroke key,KeyType keyType)
+    {
+        return key != null && key.getKeyType() == keyType;
     }
 }

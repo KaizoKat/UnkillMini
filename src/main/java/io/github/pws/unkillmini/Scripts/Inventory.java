@@ -7,9 +7,12 @@ import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
-import io.github.pws.unkillmini.assets.Items;
+import io.github.pws.unkillmini.Assets.Items;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.googlecode.lanterna.input.KeyType;
 
 public class Inventory implements ScriptableNode
 {
@@ -18,7 +21,7 @@ public class Inventory implements ScriptableNode
     String[][] ray;
     
     public static List<Item> items = new ArrayList<>();
-    
+    private static int cursor = 0;
     @Override
     public void start() 
     {
@@ -28,69 +31,139 @@ public class Inventory implements ScriptableNode
     @Override
     public void update() 
     {
-        if(Input.check(Commands.inventory)) 
-        {
-            if(Input.line.split(" ").length == 1)
-                open = !open;
-            
-            for (int i = 0; i < items.toArray().length; i++)
-            {
-                Item it = items.get(i);
-                if(Input.check(Commands.use) && Input.check(it.name) && it.stats.count > 0)
-                {
-                    if(items.get(i).stats.equipmentSlots.equals(""))
-                    {
-                        it.runner.update();
-                        it.stats.count--;
-                        items.set(i, it);
-                    }
-                    else
-                    {
-                        Window.print(it.name + " equipped!");
+        int pageCount = items.toArray().length/12;
 
-                        boolean replace = false;
-                        Item toReplace = null;
-                        for(String slot : it.stats.equipmentSlots.split(" "))
-                        {
-                            if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
-                            {
-                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
-                                it.stats.count = 0;
-                            }
-                            else 
-                            {
-                                toReplace = Equipment.equippedItems[Integer.parseInt(slot)];
-                                replace = true;
-                                break;
-                            }
-                        }
-                        
-                        if(replace)
-                        {
-                            for(String slot : toReplace.stats.equipmentSlots.split(" "))
-                                Equipment.equippedItems[Integer.parseInt(slot)] = null;
-                            
-                            for(String slot : it.stats.equipmentSlots.split(" "))
-                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
-                            
-                            it.stats.count = 0;
-                            AddItem(toReplace);
-                        }
-                        
-                        items.set(i, it);
-                    }
-                    break;
-                }
-                else if(Input.check(Commands.check) && Input.check(it.name))
+        if(Input.isKeyPressed(KeyType.Enter))
+        {
+            open = !open;
+        }
+
+        if(Input.isKeyPressed(KeyType.ArrowDown))
+        {
+            cursor++;
+            cursor = Helpers.clampBetween(cursor, 0, 11);
+        }
+        else if(Input.isKeyPressed(KeyType.ArrowUp))
+        {
+            cursor--;
+            cursor = Helpers.clampBetween(cursor, 0, 11);
+        }
+        else if(Input.isKeyPressed(KeyType.ArrowRight))
+        {
+            itemPage++;
+            itemPage = Helpers.clampBetween(cursor, 0, pageCount - 1);
+        }
+        else if(Input.isKeyPressed(KeyType.ArrowLeft))
+        {
+            itemPage--;
+            itemPage = Helpers.clampBetween(cursor, 0, pageCount - 1);
+        }
+        else if(Input.isKeyPressed(KeyType.Enter))
+        {
+            Item it = items.get(cursor);
+            if(items.get(cursor).stats.equipmentSlots.equals(""))
+            {
+                it.runner.update();
+                it.stats.count--;
+                items.set(cursor, it);
+            }
+            else
+            {
+                Window.print(it.name + " equipped!");
+
+                boolean replace = false;
+                Item toReplace = null;
+                for(String slot : it.stats.equipmentSlots.split(" "))
                 {
-                    Window.print("-Description " + items.get(i).name + "---");
-                    Window.print(items.get(i).name + ": " + items.get(i).description);
-                    break;
+                    if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
+                    {
+                        Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                        it.stats.count = 0;
+                    }
+                    else 
+                    {
+                        toReplace = Equipment.equippedItems[Integer.parseInt(slot)];
+                        replace = true;
+                        break;
+                    }
                 }
+                
+                if(replace)
+                {
+                    for(String slot : toReplace.stats.equipmentSlots.split(" "))
+                        Equipment.equippedItems[Integer.parseInt(slot)] = null;
+                    
+                    for(String slot : it.stats.equipmentSlots.split(" "))
+                        Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                    
+                    it.stats.count = 0;
+                    AddItem(toReplace);
+                }
+                
+                items.set(cursor, it);
             }
         }
-        
-        int pageCount = items.toArray().length/12;
+        else
+        {
+
+        }
+
+        /*
+        for (int i = 0; i < items.toArray().length; i++)
+        {
+            Item it = items.get(i);
+            if(Input.check(Commands.use) && Input.check(it.name) && it.stats.count > 0)
+            {
+                if(items.get(i).stats.equipmentSlots.equals(""))
+                {
+                    it.runner.update();
+                    it.stats.count--;
+                    items.set(i, it);
+                }
+                else
+                {
+                    Window.print(it.name + " equipped!");
+
+                    boolean replace = false;
+                    Item toReplace = null;
+                    for(String slot : it.stats.equipmentSlots.split(" "))
+                    {
+                        if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
+                        {
+                            Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                            it.stats.count = 0;
+                        }
+                        else 
+                        {
+                            toReplace = Equipment.equippedItems[Integer.parseInt(slot)];
+                            replace = true;
+                            break;
+                        }
+                    }
+                    
+                    if(replace)
+                    {
+                        for(String slot : toReplace.stats.equipmentSlots.split(" "))
+                            Equipment.equippedItems[Integer.parseInt(slot)] = null;
+                        
+                        for(String slot : it.stats.equipmentSlots.split(" "))
+                            Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                        
+                        it.stats.count = 0;
+                        AddItem(toReplace);
+                    }
+                    
+                    items.set(i, it);
+                }
+                break;
+            }
+            else if(Input.check(Commands.check) && Input.check(it.name))
+            {
+                Window.print("-Description " + items.get(i).name + "---");
+                Window.print(items.get(i).name + ": " + items.get(i).description);
+                break;
+            }
+        }
         
         if(pageCount > 0)
         {
@@ -115,6 +188,7 @@ public class Inventory implements ScriptableNode
             if(itemPage > pageCount -1) itemPage = pageCount -1;
             else if(itemPage < 0) itemPage = 0;
         }
+        */
         
         List<Item> temp = items;
         
@@ -126,12 +200,12 @@ public class Inventory implements ScriptableNode
         
         spr_inventory.x = 1;
         spr_inventory.y = 28;
-        spr_inventory.background = Color.rgbBG(126, 167, 168);
+        spr_inventory.background = Color.rgb(126, 167, 168);
         
         if(open)
         {
             spr_inventory.pixels = spr_inventory.buttonPressed;
-            spr_inventory.foregorund = Color.rgbFG(255, 255, 255);
+            spr_inventory.foregorund = Color.rgb(255, 255, 255);
             spr_inventory.populate();
             
             spr_inventory.y = 12;
@@ -143,7 +217,7 @@ public class Inventory implements ScriptableNode
         else 
         {
             spr_inventory.pixels = spr_inventory.button;
-            spr_inventory.foregorund = Color.rgbFG(0, 0, 0);
+            spr_inventory.foregorund = Color.rgb(0, 0, 0);
             spr_inventory.populate();
         }
     }

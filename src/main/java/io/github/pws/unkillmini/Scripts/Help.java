@@ -1,5 +1,7 @@
 package io.github.pws.unkillmini.Scripts;
 
+import com.googlecode.lanterna.input.KeyType;
+
 import io.github.pws.unkillmini.Program.Aplication;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.Window;
@@ -17,10 +19,10 @@ public class Help implements ScriptableNode
     @Override
     public void update()
     {
-        if(Input.check(Commands.help))
+        if(Input.isKeyPressed(KeyType.Unknown))
         {
             Window.print("-HELP-------------");
-            String[] broken = Input.line.split(" ");
+            String[] broken = new String[1]; //Input.line.split(" ");
             
             if(broken.length == 1)
             {
@@ -67,7 +69,7 @@ public class Help implements ScriptableNode
                 Window.print("Write help commands to display all the commands that you can write. (at the moment this doesnt work.)");
             }
         }
-        else if(Input.check(Commands.tab))
+        else if(Input.isKeyPressed(KeyType.Unknown))
         {
             if(Inventory.open == true && Equipment.open == true)
             {
@@ -84,7 +86,7 @@ public class Help implements ScriptableNode
             else if(!Equipment.open)
                 Equipment.open = true;
         }
-        else if(Input.check(Commands.end))
+        else if(Input.isKeyPressed(KeyType.Unknown))
         {
             Aplication.run = false;
         }

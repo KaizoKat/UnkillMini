@@ -5,19 +5,6 @@ setlocal enabledelayedexpansion
 
 set "batchFile=%~f0"
 
-:: Check if ANSI color support is enabled
-for /f "tokens=3" %%a in ('reg query HKCU\Console /v VirtualTerminalLevel 2^>nul') do set "ansiEnabled=%%a"
-
-if not defined ansiEnabled (
-    echo Enabling ANSI color support...
-    reg add HKCU\Console /v VirtualTerminalLevel /t REG_DWORD /d 1 /f >nul
-    echo ANSI color support has been enabled. Please restart the terminal.
-    pause
-    exit /b
-) else (
-    echo ANSI color support is enabled.
-)
-
 :: Get the directory of the batch file
 set BASE_DIR=%~dp0
 
@@ -50,13 +37,13 @@ if "!CLASSPATH:~0,1!"==";" (
     set CLASSPATH=!CLASSPATH:~1!
 )
 
-:: Compile all Java files from the src directory to the bin directory, including external libraries
+:: Compile all Java files
 echo Compiling Java files...
 
 :: Create a variable to store all Java files
 set JAVA_FILES=
 
-:: Find all Java files in the SRC_DIR and add them to the JAVA_FILES variable
+:: Find all Java files in the SRC_DIR
 for /r "%SRC_DIR%" %%f in (*.java) do (
     set JAVA_FILES=!JAVA_FILES! "%%f"
 )
@@ -82,8 +69,8 @@ echo Done compiling!
 echo ---------------------------------------Starting Engine-------------------------------------------------------
 cls
 
-:: Run the main class from the bin directory, including external libraries
-java -cp "%BIN_DIR%;%CLASSPATH%" io.github.pws.unkillmini.Program.Aplication
+:: Run the main class with Lanterna configuration
+javaw -Dcom.googlecode.lanterna.terminal=com.googlecode.lanterna.terminal.ansi.UnixTerminal -cp "%BIN_DIR%;%CLASSPATH%" io.github.pws.unkillmini.Program.Aplication
 
 if %ERRORLEVEL% neq 0 (
     echo Execution failed. Aborting.

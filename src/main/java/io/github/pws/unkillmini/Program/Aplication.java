@@ -5,7 +5,6 @@ import io.github.pws.unkillmini.Scripts.Help;
 import io.github.pws.unkillmini.Scripts.Inventory;
 import io.github.pws.unkillmini.Scripts.MakeBorder;
 import io.github.pws.unkillmini.Scripts.MakeDisclaimer;
-import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.Window;
         
 public class Aplication
@@ -38,24 +37,28 @@ public class Aplication
     
     private static void START()
     {
-        Window.compose();
+        Window.build();
+        Window.compose(); 
+
         disclaimer.start();
-        inv.start();
-        Window.refresh();
+        Window.draw();
+        Window.pause();
     }
     
     private static void UPDATE()
     {
-        Input.scan();
+        //Input.scan();
+
         border.update();
-        help.update();
         inv.update();
-        equ.update();
-        Window.refresh();
+
+        Window.draw();
     }
     
     private static void END()
     {
-        
+        try {
+            Window.terminal.close();
+        } catch (Exception e) {}
     }
 }

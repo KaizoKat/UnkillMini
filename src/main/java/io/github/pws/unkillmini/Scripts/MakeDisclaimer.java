@@ -48,8 +48,8 @@ public class MakeDisclaimer implements ScriptableNode
     {
         String[][] disclaimerStringses = Sprite.PopulateWith(disclaimer);
         Window.populateWithPixels(disclaimerStringses, 0, 0);
-        Window.setPopulatorForeground(disclaimerStringses, 0, 0, Color.rgbFG(255, 255, 255));
-        Window.setPopulatorBackground(disclaimerStringses, 0, 0, Color.rgbBG(209, 65, 65));
+        Window.setPopulatorForeground(disclaimerStringses, 0, 0, Color.rgb(255, 255, 255));
+        Window.setPopulatorBackground(disclaimerStringses, 0, 0, Color.rgb(209, 65, 65));
     }
 
     @Override

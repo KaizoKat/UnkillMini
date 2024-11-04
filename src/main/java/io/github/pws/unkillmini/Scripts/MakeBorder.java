@@ -84,11 +84,11 @@ public class MakeBorder implements ScriptableNode
     {
         String[][] borderRay = Sprite.PopulateWith(border);
         Window.populateWithPixels(borderRay, 0, 0);
-        Window.setPopulatorBackground(borderRay, 0, 0, Color.rgbBG(126, 167, 168));
-        Window.setPopulatorForeground(borderRay, 0, 0, Color.rgbFG(184, 214, 214));
+        Window.setPopulatorBackground(borderRay, 0, 0, Color.rgb(126, 167, 168));
+        Window.setPopulatorForeground(borderRay, 0, 0, Color.rgb(184, 214, 214));
         
         borderRay = Sprite.PopulateWith(mask);
-        Window.setPopulatorBackground(borderRay, 1, 1, Color.rgbBG(0, 0, 0));
+        Window.setPopulatorBackground(borderRay, 1, 1, Color.rgb(0, 0, 0));
     }
 
     @Override
