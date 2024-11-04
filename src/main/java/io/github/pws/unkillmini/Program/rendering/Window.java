@@ -6,18 +6,21 @@ public class Window
 {
     public static final int width = 120;
     public static final int height = 32;
+    public static final String apkName = "Unkill Mini";
 
     public static String pixels[][];
     public static String[][] pixelsForeground;
     public static String pixelsBackground[][];
-    private static String suffix = "";
     
+    private static String suffix = "";
+
     public static final void compose()
     {
+        setWindowsTitle(apkName);
         pixels = new String[height][width];
         pixelsForeground = new String[height][width];
         pixelsBackground = new String[height][width];
-        
+
         for (int xx = 0; xx < pixels.length; xx++)
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
@@ -75,7 +78,6 @@ public class Window
         }
 
         sb.append(suffix);
-        sb.append("\n> ");
         System.out.print(sb.toString());
         suffix = "";
         System.out.flush();
@@ -96,5 +98,22 @@ public class Window
     public static void print(String _suffix)
     {
         suffix += "\n" + _suffix;
+    }
+
+    public static void hideCursor() 
+    {
+        System.out.print("\033[?25l");
+    }
+    
+    public static void showCursor() 
+    {
+        System.out.print("\033[?25h");
+    }
+
+    public static void setWindowsTitle(String title) 
+    {
+        try { new ProcessBuilder("cmd", "/c", "title " + title).inheritIO().start().waitFor();
+        } catch (IOException | InterruptedException e) {}
+
     }
 }

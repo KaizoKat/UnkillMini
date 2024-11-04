@@ -42,15 +42,15 @@ public class Aplication
         disclaimer.start();
         inv.start();
         Window.draw();
+        Window.hideCursor();
     }
     
     private static void UPDATE()
     {
-        Input.scan();
         border.update();
-        help.update();
+        //help.update();
         inv.update();
-        equ.update();
+        //equ.update();
         Window.draw();
     }
     

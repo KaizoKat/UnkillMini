@@ -8,6 +8,7 @@ import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
 import io.github.pws.unkillmini.Assets.Items;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class Inventory implements ScriptableNode
     @Override
     public void update() 
     {
+        int pageCount = items.toArray().length/12;
+        
+        /*
         if(Input.check(Commands.inventory)) 
         {
             if(Input.line.split(" ").length == 1)
@@ -89,9 +93,7 @@ public class Inventory implements ScriptableNode
                 }
             }
         }
-        
-        int pageCount = items.toArray().length/12;
-        
+
         if(pageCount > 0)
         {
             if(open && Input.check(Commands.inv_Next))
@@ -109,7 +111,11 @@ public class Inventory implements ScriptableNode
                 } catch (NumberFormatException e) {}
             }
         }
+        */
         
+        if(Input.getPressed() == 'e')
+            open = !open;
+
         if(pageCount > 0)
         {
             if(itemPage > pageCount -1) itemPage = pageCount -1;
