@@ -29,8 +29,6 @@ public class UI implements ScriptableNode
         }
         
         prevFocused[0] = focus;
-        Window.print(prevFocused[0] + ", " + prevFocused[1] + ", " + prevFocused[2] + ", " + prevFocused[3] + ", " +
-                     prevFocused[4] + ", " + prevFocused[5] + ", " + prevFocused[6] + ", " + prevFocused[7] + ", " +
-                     prevFocused[8] + ", " + prevFocused[9]);
+        //Window.print(prevFocused[0] + ", " + prevFocused[1] + ", " + prevFocused[2] + ", " + prevFocused[3] + ", " + prevFocused[4] + ", " + prevFocused[5] + ", " + prevFocused[6] + ", " + prevFocused[7] + ", " + prevFocused[8] + ", " + prevFocused[9]);
     }
 }

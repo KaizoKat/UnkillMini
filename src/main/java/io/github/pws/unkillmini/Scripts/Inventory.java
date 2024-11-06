@@ -242,6 +242,7 @@ public class Inventory extends UI
     
     private void fillInventory(int max, int pageCount)
     {
+        Window.print(max + "");
         for (int i = 0; i < max; i++)
         {
             Item it = items.get((itemPage * 12) + i);
