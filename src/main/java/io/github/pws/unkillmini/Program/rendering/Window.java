@@ -77,7 +77,7 @@ public class Window
             }
         }
 
-        sb.append(suffix);
+        sb.append(suffix + "\n");
         System.out.print(sb.toString());
         suffix = "";
         System.out.flush();

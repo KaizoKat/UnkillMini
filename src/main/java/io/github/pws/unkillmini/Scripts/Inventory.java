@@ -3,20 +3,22 @@ package io.github.pws.unkillmini.Scripts;
 import io.github.pws.unkillmini.Assets.Sprites.spr_inventory;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
+import io.github.pws.unkillmini.Program.backbone.MiniUtils;
 import io.github.pws.unkillmini.Program.rendering.Color;
+import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.rendering.Window;
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
 import io.github.pws.unkillmini.Assets.Items;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Inventory implements ScriptableNode
+public class Inventory extends UI
 {
     public static boolean open = false;
-    int itemPage = 0;
-    String[][] ray;
+    private static int itemPage = 0;
+    private static int itemCursor = 0;
+    private static String[][] ray;
     
     public static List<Item> items = new ArrayList<>();
     
@@ -26,11 +28,15 @@ public class Inventory implements ScriptableNode
         items = Items.list;
     }
 
+
+    int tempEnterCount;
     @Override
     public void update() 
     {
         int pageCount = items.toArray().length/12;
-        
+        int max = items.toArray().length - (itemPage * 12);
+        if (max > 12) max = 12;
+
         /*
         if(Input.check(Commands.inventory)) 
         {
@@ -112,16 +118,88 @@ public class Inventory implements ScriptableNode
             }
         }
         */
-        
-        if(Input.getPressed() == 'e')
-            open = !open;
 
-        if(pageCount > 0)
+        if(Input.getPressedKey("e"))
         {
-            if(itemPage > pageCount -1) itemPage = pageCount -1;
-            else if(itemPage < 0) itemPage = 0;
+            open = !open;
+            if(open) addNewFocus("inv");
         }
-        
+
+        if(open && prevFocused[0] == "inv")
+        {
+            switch (Input.getPressedKey()) 
+            {
+                case Input.UP ->
+                {
+                    itemCursor--;
+                }
+                case Input.DOWN ->
+                {
+                    itemCursor++;
+                }
+                case Input.LEFT ->
+                {
+                    itemPage--;
+                }
+                case Input.RIGHT ->
+                {
+                    itemPage++;
+                }
+                case Input.ENTER ->
+                {
+                    int itemIndex = (itemPage * 12) + itemCursor;
+                    Item it = items.get(itemIndex);
+                    if(it.stats.equipmentSlots.equals(""))
+                    {
+                        it.runner.update();
+                        it.stats.count--;
+                        items.set(itemIndex, it);
+                    }
+                    else
+                    {
+                        boolean replace = false;
+                        Item toReplace = null;
+
+                        Window.print(it.name + " equipped!");
+
+                        for(String slot : it.stats.equipmentSlots.split(" "))
+                        {
+                            if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
+                            {
+                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                                it.stats.count = 0;
+                            }
+                            else 
+                            {
+                                toReplace = Equipment.equippedItems[Integer.parseInt(slot)];
+                                replace = true;
+                                break;
+                            }
+                        }
+                        
+                        if(replace)
+                        {
+                            for(String slot : toReplace.stats.equipmentSlots.split(" "))
+                                Equipment.equippedItems[Integer.parseInt(slot)] = null;
+                            
+                            for(String slot : it.stats.equipmentSlots.split(" "))
+                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                            
+                            it.stats.count = 0;
+                            AddItem(toReplace);
+                        }
+                    }
+                    
+                    items.set(itemIndex, it);
+                }
+
+                default ->
+                {
+                    
+                }
+            }
+        }
+
         List<Item> temp = items;
         
         for (int i = 0; i < temp.toArray().length; i++)
@@ -129,6 +207,9 @@ public class Inventory implements ScriptableNode
                 temp.remove(i);
         
         items = temp;
+
+        itemPage = MiniUtils.ClampInt(itemPage, 0, pageCount);
+        itemCursor = MiniUtils.ClampInt(itemCursor, 0, max);
         
         spr_inventory.x = 1;
         spr_inventory.y = 28;
@@ -144,7 +225,7 @@ public class Inventory implements ScriptableNode
             spr_inventory.pixels = spr_inventory.invBoder;
             spr_inventory.populate();
             
-            fillInventory();
+            fillInventory(max, pageCount);
         }
         else 
         {
@@ -159,19 +240,17 @@ public class Inventory implements ScriptableNode
     {
     }
     
-    private void fillInventory()
+    private void fillInventory(int max, int pageCount)
     {
-        int pageCount = items.toArray().length/12;
-        int max = items.toArray().length - (itemPage * 12);
-        
-        if (itemPage < pageCount)
-        {
-            max = 12;
-        }
-        
         for (int i = 0; i < max; i++)
         {
-            ray = Sprite.PopulateWith(items.get((itemPage * 12) + i).stats.count + " " + items.get((itemPage * 12) + i).name);
+            Item it = items.get((itemPage * 12) + i);
+            ray = Sprite.PopulateWith(it.stats.count + " " + it.name);
+
+            String select = "                    ";
+            if(i == itemCursor)
+                Window.setPopulatorBackground(Sprite.PopulateWith(select), 2, 14 + i, Color.rgbBG(139, 195, 196));
+            
             Window.populateWithPixels(ray, 3, 14 + i);
         }
         

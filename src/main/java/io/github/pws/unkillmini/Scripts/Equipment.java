@@ -7,16 +7,18 @@ package io.github.pws.unkillmini.Scripts;
 import io.github.pws.unkillmini.Assets.Sprites.spr_equipment;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.MiniUtils;
 import io.github.pws.unkillmini.Program.rendering.Color;
+import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
-public class Equipment implements ScriptableNode
+public class Equipment extends UI
 {
     public static boolean open = false;
     public static boolean charms = false;
     
     public static Item[] equippedItems = new Item[7];
+    private static int slotIndex = 0;
     @Override
     public void start() 
     {
@@ -25,13 +27,14 @@ public class Equipment implements ScriptableNode
     @Override
     public void update() 
     {
-        boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false;
+        //boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false;
         
-        if(Input.check(Commands.equipment))
+        if(Input.getPressedKey("r"))
         {
-            if(Input.line.split(" ").length == 1)
-                open = !open;
+            open = !open;
+            if(open) addNewFocus("equ");
             
+            /*
             if(open && Input.check(Commands.check + " left arm"))
                 larm = true;
             else if(open && Input.check(Commands.check + " right arm"))
@@ -50,9 +53,20 @@ public class Equipment implements ScriptableNode
             {
                 Window.print("-Checks------------");
                 Window.print("left arm, right arm, chest, legs, head, weapon and charms");
-            }
+            */
         }
         
+        if(open && prevFocused[0] == "equ")
+        {
+            if(Input.getPressedKey() == Input.LEFT || Input.getPressedKey() == Input.DOWN)
+                slotIndex++;
+            else if (Input.getPressedKey() == Input.RIGHT || Input.getPressedKey() == Input.UP)
+                slotIndex--;
+        }
+
+
+        slotIndex = MiniUtils.ClampInt(slotIndex, 0, 7);
+
         spr_equipment.x = 23;
         spr_equipment.y = 28;
         spr_equipment.background = Color.rgbBG(126, 167, 168);
@@ -80,7 +94,7 @@ public class Equipment implements ScriptableNode
             String selectBG = Color.rgbBG(133, 185, 186);
             String selectFG = Color.rgbFG(255, 255, 255);
 
-            if(larm)
+            if(slotIndex == 1)
             {
                 String area =     
                 """
@@ -92,7 +106,7 @@ public class Equipment implements ScriptableNode
                 selectArea(area, 65, 12, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[0], "left arm");
             }
-            else if(rarm)
+            else if(slotIndex == 2)
             {
                 String area =
                 """
@@ -104,7 +118,7 @@ public class Equipment implements ScriptableNode
                 selectArea(area, 27, 12, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[1], "right arm");
             }
-            else if(legs)
+            else if(slotIndex == 3)
             {
                 String area =
                 """
@@ -119,7 +133,7 @@ public class Equipment implements ScriptableNode
                 selectArea(area, 45, 21, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[2], "legs");
             }
-            else if(chest)
+            else if(slotIndex == 0)
             {
                 String area =
                 """
@@ -136,7 +150,7 @@ public class Equipment implements ScriptableNode
                 selectArea(area, 45, 12, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[3], "chest");
             }
-            else if(head)
+            else if(slotIndex == 4)
             {
                 String area =
                 """
@@ -149,7 +163,7 @@ public class Equipment implements ScriptableNode
                 selectArea(area, 47, 7, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[4], "head");
             }
-            else if(weapon)
+            else if(slotIndex == 5)
             {
                 String area =
                 "           /&%*\n"+
@@ -163,7 +177,7 @@ public class Equipment implements ScriptableNode
                 selectArea(area, 67, 18, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[5], "weapon");
             }
-            else if(charms)
+            else if(slotIndex == 6)
             {
                 String area =
                 "     *%&/     \n"+
@@ -227,13 +241,9 @@ public class Equipment implements ScriptableNode
             it will print an inventory right in the middle of the exquipment tab and will work just like the inventory,
             except with other commands and wi stay on as long as that command is not "eq. ch. totems" or another ch command
             */
-            if(open && !Input.check(Commands.check + " charms"))
+            if(slotIndex == 6)
             {
                 
-            }
-            else if(open)
-            {
-                //chech for charm commands
             }
         }
     }
@@ -242,11 +252,11 @@ public class Equipment implements ScriptableNode
     {
         if(it == null)
         {
-            Window.print("There is no currently equiped item on the " + slot);
+            //Window.print("There is no currently equiped item on the " + slot);
         }
         else
         {
-            Window.print(it.name + " | " + it.description);
+            //Window.print(it.name + " | " + it.description);
         }
     }
     

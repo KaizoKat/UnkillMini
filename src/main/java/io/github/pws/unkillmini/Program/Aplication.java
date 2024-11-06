@@ -40,6 +40,7 @@ public class Aplication
     {
         Window.compose();
         disclaimer.start();
+        equ.start();
         inv.start();
         Window.draw();
         Window.hideCursor();
@@ -47,10 +48,13 @@ public class Aplication
     
     private static void UPDATE()
     {
+        Input.scanInput();
+
         border.update();
-        //help.update();
+        help.update();
         inv.update();
-        //equ.update();
+        equ.update();
+        try {Thread.sleep(10);} catch (Exception e) {}
         Window.draw();
     }
     

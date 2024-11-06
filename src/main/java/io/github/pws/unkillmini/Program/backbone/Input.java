@@ -11,7 +11,29 @@ import com.sun.jna.Platform;
 public class Input 
 {
     public static String line = "";
+    public static int inputKey = -1;
     public static final Scanner scan = new Scanner(System.in);
+
+    public static final int TAB = 9;
+    public static final int ENTER = 13;
+    public static final int ESC= 27;
+    public static final int SPACE= 32;
+    public static final int UP= 72;
+    public static final int LEFT= 75;
+    public static final int RIGHT = 77;
+    public static final int DOWN = 80;
+    public static final int F1 = 59;
+    public static final int F2 = 60;
+    public static final int F3 = 61;
+    public static final int F4 = 62;
+    public static final int F5 = 63;
+    public static final int F6 = 64;
+    public static final int F7 = 65;
+    public static final int F8 = 66;
+    public static final int F9 = 67;
+    public static final int F12 = 134;
+    public static final int F10 = 68;
+    public static final int F11 = 133;
 
     public interface CLibrary extends Library 
     {
@@ -28,6 +50,11 @@ public class Input
     {
         line = scan.nextLine();
     }
+
+    public static void scanInput()
+    {
+        inputKey = assign();
+    }
     
     public static boolean check(String word)
     {
@@ -42,7 +69,7 @@ public class Input
         return false;
     }
 
-    public static char getPressed() 
+    public static char assign() 
     {
         if (CLibrary.INSTANCE._kbhit() != 0)
         {
@@ -53,5 +80,15 @@ public class Input
         }
 
         return (char)-1;
+    }
+
+    public static char getPressedKey()
+    {
+        return (char)inputKey;
+    }
+
+    public static boolean getPressedKey(String key)
+    {
+        return MiniUtils.CheckCharCaseless(inputKey, (int)key.charAt(0));
     }
 }

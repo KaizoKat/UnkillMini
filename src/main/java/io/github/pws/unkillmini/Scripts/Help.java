@@ -2,6 +2,7 @@ package io.github.pws.unkillmini.Scripts;
 
 import io.github.pws.unkillmini.Program.Aplication;
 import io.github.pws.unkillmini.Program.backbone.Input;
+import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 
@@ -17,6 +18,26 @@ public class Help implements ScriptableNode
     @Override
     public void update()
     {
+        if(Input.getPressedKey() == Input.TAB)
+        {
+            UI.addNewFocus(UI.prevFocused[1]);
+            String focus = UI.prevFocused[0];
+
+            switch (focus)
+            {
+                case "inv" ->
+                {
+                    Inventory.open = true;
+                }
+                case "equ" ->
+                {
+                    Equipment.open = true;
+                }
+                default -> {}
+            }
+        }
+
+        /*
         if(Input.check(Commands.help))
         {
             Window.print("-HELP-------------");
@@ -87,7 +108,7 @@ public class Help implements ScriptableNode
         else if(Input.check(Commands.end))
         {
             Aplication.run = false;
-        }
+        */
     }
 
     @Override
