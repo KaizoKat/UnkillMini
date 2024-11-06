@@ -7,11 +7,11 @@ package io.github.pws.unkillmini.Scripts;
 import io.github.pws.unkillmini.Assets.Sprites.spr_equipment;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.UI;
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
-public class Equipment implements ScriptableNode
+public class Equipment extends UI
 {
     public static boolean open = false;
     public static boolean charms = false;

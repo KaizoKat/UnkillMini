@@ -133,4 +133,23 @@ public class Window
     {
         suffix += "\n" + _suffix;
     }
+<<<<<<< Updated upstream
+=======
+
+    public static void hideCursor() 
+    {
+        System.out.print("\033[?25l");
+    }
+    
+    public static void showCursor() 
+    {
+        System.out.print("\033[?25h");
+    }
+
+    public static void setWindowsTitle(String title) 
+    {
+        try { new ProcessBuilder("cmd", "/c", "title " + title).inheritIO().start().waitFor();
+        } catch (IOException | InterruptedException e) {}
+    }
+>>>>>>> Stashed changes
 }

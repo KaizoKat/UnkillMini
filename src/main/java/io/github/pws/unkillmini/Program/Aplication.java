@@ -37,12 +37,23 @@ public class Aplication
     
     private static void START()
     {
+<<<<<<< Updated upstream
         Window.build();
         Window.compose(); 
 
+=======
+        Input.startInputThread();
+        Window.compose();
+>>>>>>> Stashed changes
         disclaimer.start();
         Window.draw();
+<<<<<<< Updated upstream
         Window.pause();
+=======
+        Window.hideCursor();
+        Window.pause();
+        Window.clear();
+>>>>>>> Stashed changes
     }
     
     private static void UPDATE()
