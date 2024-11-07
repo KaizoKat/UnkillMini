@@ -37,5 +37,8 @@ public class Items
         add(new Item("Vat of acid", "Whatever you do, dont jump in it.", new Item.Stats(1,""),new Apple()));
         add(new Item("Word", "word...",  new Item.Stats(99,"5"),new Apple()));
         add(new Item("X coordinate", "Why do you have this? Give me it.", new Item.Stats(1,""),new Apple()));
+        add(new Item("Gun", "The fuck is a kilometer. *eagle sounds*", new Item.Stats(1,"5"),new Apple()));
+        add(new Item("Sword", "mhm",  new Item.Stats(1,"5"),new Apple()));
+        add(new Item("Paper", "Burn it.", new Item.Stats(10,""),new Apple()));
     }};
 }

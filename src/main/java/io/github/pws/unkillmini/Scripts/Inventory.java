@@ -33,10 +33,10 @@ public class Inventory extends UI
     @Override
     public void update() 
     {
-        int pageCount = items.toArray().length/12;
+        int pageCount = (items.toArray().length/12) + 1;
         int max = items.toArray().length - (itemPage * 12);
-        if (max > 12) max = 12;
-
+        if (itemPage < pageCount -1) max = 12;
+        if(max == 1 && itemPage > 0) itemPage--;
         /*
         if(Input.check(Commands.inventory)) 
         {
@@ -147,6 +147,9 @@ public class Inventory extends UI
                 }
                 case Input.ENTER ->
                 {
+                    if(items.toArray().length == 0)
+                        break;
+
                     int itemIndex = (itemPage * 12) + itemCursor;
                     Item it = items.get(itemIndex);
                     if(it.stats.equipmentSlots.equals(""))
@@ -225,7 +228,7 @@ public class Inventory extends UI
             spr_inventory.pixels = spr_inventory.invBoder;
             spr_inventory.populate();
             
-            fillInventory(max, pageCount);
+            fillInventory();
         }
         else 
         {
@@ -240,35 +243,37 @@ public class Inventory extends UI
     {
     }
     
-    private void fillInventory(int max, int pageCount)
+    private void fillInventory()
     {
-        Window.print(max + "");
+        int pageCount = items.toArray().length/12;
+        int max = items.toArray().length - (itemPage * 12);
+        if (itemPage < pageCount)max = 12;
+        
         for (int i = 0; i < max; i++)
         {
-            Item it = items.get((itemPage * 12) + i);
-            ray = Sprite.PopulateWith(it.stats.count + " " + it.name);
+            ray = Sprite.PopulateWith(items.get((itemPage * 12) + i).stats.count + " " + items.get((itemPage * 12) + i).name);
 
             String select = "                    ";
             if(i == itemCursor)
                 Window.setPopulatorBackground(Sprite.PopulateWith(select), 2, 14 + i, Color.rgbBG(139, 195, 196));
-            
+
             Window.populateWithPixels(ray, 3, 14 + i);
         }
         
-        if (pageCount < 1)
+        if (pageCount == 0) 
             return;
         
         if (itemPage == 0)
         {
             ray = Sprite.PopulateWith("|      page  "+ (itemPage + 1) +"    >> |");
         }
-        else if(itemPage < pageCount -1)
+        else if (itemPage == pageCount)
         {
-            ray = Sprite.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
+            ray = Sprite.PopulateWith("| <<   page  "+ (itemPage + 1) +"       |");
         }
         else 
         {
-            ray = Sprite.PopulateWith("| <<   page  "+ (itemPage + 1) +"       |");
+            ray = Sprite.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
         }
         
         Window.populateWithPixels(ray, 1, 26);
