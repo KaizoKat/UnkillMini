@@ -18,10 +18,10 @@ public class Help implements ScriptableNode
     @Override
     public void update()
     {
+        String focus = UI.prevFocused[0];
         if(Input.getPressedKey() == Input.TAB)
         {
             UI.addNewFocus(UI.prevFocused[1]);
-            String focus = UI.prevFocused[0];
 
             switch (focus)
             {
@@ -36,6 +36,11 @@ public class Help implements ScriptableNode
                 default -> {}
             }
         }
+
+        if(Inventory.open && !Equipment.open && focus != "inv")
+            UI.addNewFocus("inv");
+        else if(!Inventory.open && Equipment.open && focus != "equ")
+            UI.addNewFocus("equ");
 
         /*
         if(Input.check(Commands.help))

@@ -8,9 +8,9 @@ public class Window
     public static final int height = 32;
     public static final String apkName = "Unkill Mini";
 
-    public static String pixels[][];
+    public static String[][] pixels;
     public static String[][] pixelsForeground;
-    public static String pixelsBackground[][];
+    public static String[][] pixelsBackground;
     
     private static String suffix = "";
 
@@ -26,8 +26,8 @@ public class Window
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
                 pixels[xx][yy] = "";
-                pixelsForeground[xx][yy] = Color.rgbFG(255, 255, 255);
-                pixelsBackground[xx][yy] = Color.rgbBG(0, 0, 0);
+                pixelsForeground[xx][yy] = "";
+                pixelsBackground[xx][yy] = "";
             }
         }
     }
@@ -68,13 +68,14 @@ public class Window
     public static final void draw()
     {
         StringBuilder sb = new StringBuilder();
-        System.out.print("\033[1;1H");
+        System.out.print("\033[0;0H");
         for (int xx = 0; xx < pixels.length; xx++)
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
-                sb.append(pixelsForeground[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]).append(Color.RESET);
+                sb.append(pixelsForeground[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]);
             }
+            sb.append(Color.RESET);
         }
 
         sb.append(suffix + "\n");

@@ -251,7 +251,8 @@ public class Inventory extends UI
         
         for (int i = 0; i < max; i++)
         {
-            ray = Sprite.PopulateWith(items.get((itemPage * 12) + i).stats.count + " " + items.get((itemPage * 12) + i).name);
+            Item item = items.get((itemPage * 12) + i);
+            ray = Sprite.PopulateWith(item.stats.count + " " + item.name);
 
             String select = "                    ";
             if(i == itemCursor)
