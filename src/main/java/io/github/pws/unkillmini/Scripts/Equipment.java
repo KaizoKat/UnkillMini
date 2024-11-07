@@ -19,6 +19,8 @@ public class Equipment extends UI
     
     public static Item[] equippedItems = new Item[7];
     private static int slotIndex = 0;
+    private static spr_equipment spr = new spr_equipment();
+
     @Override
     public void start() 
     {
@@ -67,25 +69,25 @@ public class Equipment extends UI
 
         slotIndex = MiniUtils.ClampInt(slotIndex, 0, 7);
 
-        spr_equipment.x = 23;
-        spr_equipment.y = 28;
-        spr_equipment.background = Color.rgbBG(126, 167, 168);
+        spr.x = 23;
+        spr.y = 28;
+        spr.background = Color.rgbBG(126, 167, 168);
 
         if(open)
         {
-            spr_equipment.pixels = spr_equipment.buttonPressed;
-            spr_equipment.foregorund = Color.rgbFG(255, 255, 255);
-            spr_equipment.populate();
+            spr.pixels = spr_equipment.buttonPressed;
+            spr.foregorund = Color.rgbFG(255, 255, 255);
+            spr.populate();
             
-            spr_equipment.y = 5;
-            spr_equipment.pixels = spr_equipment.eqBorder;
-            spr_equipment.populate();
+            spr.y = 5;
+            spr.pixels = spr_equipment.eqBorder;
+            spr.populate();
             
-            spr_equipment.x = 25;
-            spr_equipment.y = 7;
-            spr_equipment.pixels = spr_equipment.eqSlots;
-            spr_equipment.foregorund = Color.rgbFG(201, 212, 212);
-            spr_equipment.populate();
+            spr.x = 25;
+            spr.y = 7;
+            spr.pixels = spr_equipment.eqSlots;
+            spr.foregorund = Color.rgbFG(201, 212, 212);
+            spr.populate();
             
             char cBor = ' ';
             String borderBG = Color.rgbBG(133, 185, 186);
@@ -194,9 +196,9 @@ public class Equipment extends UI
         }
         else 
         {
-            spr_equipment.pixels = spr_equipment.button;
-            spr_equipment.foregorund = Color.rgbFG(0, 0, 0);
-            spr_equipment.populate();
+            spr.pixels = spr_equipment.button;
+            spr.foregorund = Color.rgbFG(0, 0, 0);
+            spr.populate();
         }
     }
 
@@ -270,7 +272,7 @@ public class Equipment extends UI
             if(s == 0 || s == lamda.length-1)
             {
                 lamda[s] = String.valueOf(cBor);
-                for(char c : temp[0].toCharArray())
+                for(@SuppressWarnings("unused") char c : temp[0].toCharArray())
                 {
                     lamda[s] += String.valueOf(cBor);
                 }
@@ -285,18 +287,18 @@ public class Equipment extends UI
         StringBuilder sb = new StringBuilder();
         for(String s : lamda) sb.append(s);
         
-        spr_equipment.background = borderBG;
-        spr_equipment.foregorund = borderFG;
-        spr_equipment.x = poX-1;
-        spr_equipment.y = poY-1;
-        spr_equipment.pixels = sb.toString();
-        spr_equipment.populate();
+        spr.background = borderBG;
+        spr.foregorund = borderFG;
+        spr.x = poX-1;
+        spr.y = poY-1;
+        spr.pixels = sb.toString();
+        spr.populate();
         
-        spr_equipment.background = selectBG;
-        spr_equipment.foregorund = selectFG;
-        spr_equipment.x = poX;
-        spr_equipment.y = poY;
-        spr_equipment.pixels = area;
-        spr_equipment.populate();
+        spr.background = selectBG;
+        spr.foregorund = selectFG;
+        spr.x = poX;
+        spr.y = poY;
+        spr.pixels = area;
+        spr.populate();
     }
 }

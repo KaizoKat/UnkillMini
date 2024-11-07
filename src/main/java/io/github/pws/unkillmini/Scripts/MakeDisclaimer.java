@@ -9,37 +9,37 @@ public class MakeDisclaimer implements ScriptableNode
 {   
     private String disclaimer = 
     """
-    ---------------------------------#######################################################################################
-    |   !!      Disclaimer     !!   |#######################################################################################
-    | Resize your screen untill this|                                                                                     ##
-    | line is properly aligneed.    |                                                                                     ##
-    |                               |                                                                                     ##
-    |   Continue?   (PRESS ENTER)   |                                                                                     ##
-    ---------------------------------                                                                                     ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
-    ##                                                                                                                    ##
     ########################################################################################################################
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                          ---------------------------------                                           #
+    #                                          |   !!      Disclaimer     !!   |                                           #
+    #                                          | Resize your screen untill this|                                           #
+    #                                          | line is properly aligneed.    |                                           #
+    #                                          |                               |                                           #
+    #                                          |   Continue?   (PRESS ENTER)   |                                           #
+    #                                          ---------------------------------                                           #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
+    #                                                                                                                      #
     ########################################################################################################################
     """;
     
@@ -50,6 +50,8 @@ public class MakeDisclaimer implements ScriptableNode
         Window.populateWithPixels(disclaimerStringses, 0, 0);
         Window.setPopulatorForeground(disclaimerStringses, 0, 0, Color.rgbFG(255, 255, 255));
         Window.setPopulatorBackground(disclaimerStringses, 0, 0, Color.rgbBG(209, 65, 65));
+        Window.draw();
+        Window.pause();
     }
 
     @Override

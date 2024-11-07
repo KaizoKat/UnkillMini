@@ -19,6 +19,7 @@ public class Inventory extends UI
     private static int itemPage = 0;
     private static int itemCursor = 0;
     private static String[][] ray;
+    private static spr_inventory spr = new spr_inventory();
     
     public static List<Item> items = new ArrayList<>();
     
@@ -214,27 +215,27 @@ public class Inventory extends UI
         itemPage = MiniUtils.ClampInt(itemPage, 0, pageCount);
         itemCursor = MiniUtils.ClampInt(itemCursor, 0, max);
         
-        spr_inventory.x = 1;
-        spr_inventory.y = 28;
-        spr_inventory.background = Color.rgbBG(126, 167, 168);
+        spr.x = 1;
+        spr.y = 28;
+        spr.background = Color.rgbBG(126, 167, 168);
         
         if(open)
         {
-            spr_inventory.pixels = spr_inventory.buttonPressed;
-            spr_inventory.foregorund = Color.rgbFG(255, 255, 255);
-            spr_inventory.populate();
+            spr.pixels = spr_inventory.buttonPressed;
+            spr.foregorund = Color.rgbFG(255, 255, 255);
+            spr.populate();
             
-            spr_inventory.y = 12;
-            spr_inventory.pixels = spr_inventory.invBoder;
-            spr_inventory.populate();
+            spr.y = 12;
+            spr.pixels = spr_inventory.invBoder;
+            spr.populate();
             
             fillInventory();
         }
         else 
         {
-            spr_inventory.pixels = spr_inventory.button;
-            spr_inventory.foregorund = Color.rgbFG(0, 0, 0);
-            spr_inventory.populate();
+            spr.pixels = spr_inventory.button;
+            spr.foregorund = Color.rgbFG(0, 0, 0);
+            spr.populate();
         }
     }
 

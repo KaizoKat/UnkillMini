@@ -1,9 +1,7 @@
 package io.github.pws.unkillmini.Scripts;
 
-import io.github.pws.unkillmini.Program.Aplication;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.UI;
-import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 
 public class Help implements ScriptableNode

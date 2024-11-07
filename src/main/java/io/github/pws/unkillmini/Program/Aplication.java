@@ -5,6 +5,7 @@ import io.github.pws.unkillmini.Scripts.Help;
 import io.github.pws.unkillmini.Scripts.Inventory;
 import io.github.pws.unkillmini.Scripts.MakeBorder;
 import io.github.pws.unkillmini.Scripts.MakeDisclaimer;
+import io.github.pws.unkillmini.Scripts.Rooms.SmallRoom;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.Window;
         
@@ -17,6 +18,7 @@ public class Aplication
     private static final Inventory inv = new Inventory();
     private static final Equipment equ = new Equipment();
     private static final Help help = new Help();
+    private static final SmallRoom room = new SmallRoom();
     
     public static void main(String[] args)
     {
@@ -40,6 +42,7 @@ public class Aplication
     {
         Window.compose();
         disclaimer.start();
+        room.start();
         equ.start();
         inv.start();
         Window.draw();
@@ -49,8 +52,8 @@ public class Aplication
     private static void UPDATE()
     {
         Input.scanInput();
-
         border.update();
+        room.update();
         help.update();
         inv.update();
         equ.update();

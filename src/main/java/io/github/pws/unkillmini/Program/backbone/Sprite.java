@@ -1,16 +1,17 @@
 package io.github.pws.unkillmini.Program.backbone;
 
+import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Sprite {
     
-    public static String pixels;
-    public static int x;
-    public static int y;
-    public static String background;
-    public static String foregorund;
+    public String pixels = "";
+    public int x = 0;
+    public int y = 0;
+    public String background = Color.rgbBG(0, 0, 0);
+    public String foregorund = Color.rgbFG(255, 255, 255);
     
-    public static void populate()
+    public void populate()
     {
         String[][] ray = PopulateWith(pixels);
         Window.populateWithPixels(ray, x, y);
@@ -18,7 +19,7 @@ public class Sprite {
         Window.setPopulatorForeground(ray, x, y, foregorund);
     }
     
-        public static String[][] PopulateWith(String sprite)
+    public static String[][] PopulateWith(String sprite)
     {
         String[] lines = sprite.split("\n");
 
