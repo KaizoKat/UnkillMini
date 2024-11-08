@@ -11,18 +11,18 @@ public class SmallRoom implements ScriptableNode
     @Override
     public void start() 
     {
-        r.transform.x = 1;
-        r.transform.y = 1;
-        rS.transform.x = 2;
-        rS.transform.y = 3;
+        r.transform.x = -17;
+        r.transform.y = -3;
+        rS.transform.x = 10;
+        rS.transform.y = 10;
 
-        r.setWidth(25);
+        r.setWidth(20);
         r.setHeight(15);
-        rS.setWidth(25);
-        rS.setHeight(7);
+        rS.setWidth(20);
+        rS.setHeight(15);
 
-        r.roomMap = r.generateRoomMap();
-        rS.roomMap = rS.generateRoomMap();
+        r.generateRoomMap();
+        rS.generateRoomMap();
 
         r.roomMap = r.merge(rS);
     }
@@ -30,7 +30,7 @@ public class SmallRoom implements ScriptableNode
     @Override
     public void update()
     {
-        r.CreateRoom();
+        r.createRoom();
     }
 
     @Override

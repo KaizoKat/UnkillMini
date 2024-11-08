@@ -21,68 +21,71 @@ public class Room
         this.height = MiniUtils.ClampInt(height, 3, this.maxWallSize);
     }
 
-    public final void CreateRoom()
+    public final void createRoom()
     {
         StringBuilder sb = new StringBuilder();
 
-        for (char[] cs : roomMap)
+        for (int yy = 0; yy < roomMap.length; yy++)
         {
-            for (char c : cs) 
+            if(this.transform.y + yy > Window.height - 2) continue;
+
+            for (int xx = 0; xx < roomMap[yy].length; xx++)
             {
-                if(c == '#') sb.append(c);
-                else if(c == '.' || c == 'D') sb.append(" ");
-                else sb.append(c);
+                if(this.transform.x + xx > Window.width - 1) continue;
+
+                if(roomMap[yy][xx] == '#') sb.append("#");
+                else if(roomMap[yy][xx] == '.' || roomMap[yy][xx] == 'D') sb.append(" ");
+                else sb.append(roomMap[yy][xx]);
             }
             sb.append("\n");
         }
-
         transform.pixels = sb.toString();
         transform.populate();
     }
 
     public final char[][] merge(Room other)
     {
-        char[][] mergedRoom = new char[other.transform.x + other.width][other.transform.y + other.height];
+        char[][] mergedRoom = new char[other.transform.y + other.height][other.transform.x + other.width];
 
-        for (int xx = 0; xx < other.transform.x + other.width; xx++)
+        for (int yy = 0; yy < other.transform.y + other.height; yy++)
         {
-            for (int yy = 0; yy < other.transform.y + other.height; yy++)
+            for (int xx = 0; xx < other.transform.x + other.width; xx++)
             {   
-                mergedRoom[xx][yy] = ' ';
+                mergedRoom[yy][xx] = ' ';
             }
         }
 
-        for (int xx = 0; xx < this.width; xx++)
+        for (int yy = 0; yy < this.height; yy++)
         {
-            for (int yy = 0; yy < this.height; yy++) 
+            for (int xx = 0; xx < this.width; xx++) 
             {   
-                this.roomMap[xx][yy] += 0;
-                mergedRoom[xx][yy] += 0;
-                mergedRoom[xx][yy] = this.roomMap[xx][yy];
+                this.roomMap[yy][xx] += 0;
+                mergedRoom[yy][xx] += 0;
+                mergedRoom[yy][xx] = this.roomMap[yy][xx];
             }
         }
 
-        for (int xx = 0; xx < other.width; xx++) 
+        for (int yy = 0; yy < other.height; yy++) 
         {
-            for (int yy = 0; yy < other.height; yy++)
+            for (int xx = 0; xx < other.width; xx++)
             {
-                mergedRoom[xx + other.transform.x][yy + other.transform.y] = other.roomMap[xx][yy];
+                mergedRoom[yy + other.transform.y][xx + other.transform.x] = other.roomMap[yy][xx];
             }
         }
         
-        for (int xx = 1; xx < other.transform.x + other.width-1; xx++)
+        for (int yy = 1; yy < other.transform.y + other.height-1; yy++)
         {
-            for (int yy = 1; yy < other.transform.y + other.height-1; yy++)
+            for (int xx = 1; xx < other.transform.x + other.width-1; xx++)
             {
                 int nrDots = 0;
-                if(mergedRoom[xx-1][yy] == '.') nrDots++;
-                if(mergedRoom[xx+1][yy] == '.') nrDots++; 
-                if(mergedRoom[xx][yy-1] == '.') nrDots++;
-                if(mergedRoom[xx][yy+1] == '.') nrDots++;
+                if(mergedRoom[yy-1][xx] == '.') nrDots++;
+                if(mergedRoom[yy+1][xx] == '.') nrDots++; 
+                if(mergedRoom[yy][xx-1] == '.') nrDots++;
+                if(mergedRoom[yy][xx+1] == '.') nrDots++;
 
-                if(nrDots >= 2 && mergedRoom[xx][yy] == '#')
+                if(nrDots >= 2 && mergedRoom[yy][xx] == '#')
                 {
-                    mergedRoom[xx][yy] = 'D';
+                    mergedRoom[yy][xx] = 'D';
                 }
             }
         }
@@ -90,23 +93,23 @@ public class Room
         return mergedRoom;
     }
 
-    public final char[][] generateRoomMap()
+    public final void generateRoomMap()
     {
-        char[][] room = new char[this.width][this.height];
-        for (int xx = 0; xx < this.width; xx++) 
+        roomMap = new char[this.height][this.width];
+
+        for (int yy = 0; yy < this.height; yy++)
         {
-            for (int yy = 0; yy < this.height; yy++) 
+            for (int xx = 0; xx < this.width; xx++)
             {
-                if(xx > 0 && xx < this.width-1 && yy > 0 && yy < this.height -1)
+                if(yy > 0 && yy < this.height-1 && xx > 0 && xx < this.width -1)
                 {
-                    room[xx][yy] = '.';
+                    roomMap[yy][xx] = '.';
                 }
                 else
                 {
-                    room[xx][yy] = '#';
+                    roomMap[yy][xx] = '#';
                 }
             }
         }
-        return room;
     }
 }

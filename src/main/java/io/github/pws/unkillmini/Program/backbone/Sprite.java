@@ -13,10 +13,25 @@ public class Sprite {
     
     public void populate()
     {
-        String[][] ray = PopulateWith(pixels);
+        String[][] ray = prepare(PopulateWith(pixels));
         Window.populateWithPixels(ray, x, y);
         Window.setPopulatorBackground(ray, x, y, background);
         Window.setPopulatorForeground(ray, x, y, foregorund);
+    }
+
+    public final String[][] prepare(String[][] original)
+    {
+        String[][] modified =  new String[x < 0 ? original.length - (-1*y) : original.length][y < 0 ? original[0].length - (-1*x) : original[0].length];
+        
+        for (int yy = 0; yy < modified.length; yy++) 
+        {
+            for (int xx = 0; xx < modified[yy].length; xx++)
+            {
+                modified[yy][xx] = original[y < 0 ? yy + (-1*y) : yy][x < 0 ? xx + (-1*x) : xx];
+            }
+        }
+
+        return modified;
     }
     
     public static String[][] PopulateWith(String sprite)

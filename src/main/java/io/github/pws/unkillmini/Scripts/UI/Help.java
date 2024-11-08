@@ -1,4 +1,4 @@
-package io.github.pws.unkillmini.Scripts;
+package io.github.pws.unkillmini.Scripts.UI;
 
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.UI;

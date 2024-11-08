@@ -1,11 +1,11 @@
 package io.github.pws.unkillmini.Program;
 
-import io.github.pws.unkillmini.Scripts.Equipment;
-import io.github.pws.unkillmini.Scripts.Help;
-import io.github.pws.unkillmini.Scripts.Inventory;
-import io.github.pws.unkillmini.Scripts.MakeBorder;
-import io.github.pws.unkillmini.Scripts.MakeDisclaimer;
 import io.github.pws.unkillmini.Scripts.Rooms.SmallRoom;
+import io.github.pws.unkillmini.Scripts.UI.Equipment;
+import io.github.pws.unkillmini.Scripts.UI.Help;
+import io.github.pws.unkillmini.Scripts.UI.Inventory;
+import io.github.pws.unkillmini.Scripts.UI.MakeBorder;
+import io.github.pws.unkillmini.Scripts.UI.MakeDisclaimer;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.Window;
         
@@ -22,6 +22,10 @@ public class Aplication
     
     public static void main(String[] args)
     {
+        Window.compose();
+        disclaimer.start();
+        Window.clear();
+
         START();
         
         while(true)
@@ -41,23 +45,28 @@ public class Aplication
     private static void START()
     {
         Window.compose();
-        disclaimer.start();
+        border.start();
         room.start();
         equ.start();
         inv.start();
+        Window.fillBlanks();
         Window.draw();
         Window.hideCursor();
     }
     
     private static void UPDATE()
     {
+        Window.compose();
         Input.scanInput();
-        border.update();
+        //game
         room.update();
+        //ui
+        border.update();
         help.update();
         inv.update();
         equ.update();
-        try {Thread.sleep(10);} catch (Exception e) {}
+        try {Thread.sleep(1);} catch (Exception e) {}
+        Window.fillBlanks();
         Window.draw();
     }
     

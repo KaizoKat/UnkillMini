@@ -1,4 +1,4 @@
-package io.github.pws.unkillmini.Scripts;
+package io.github.pws.unkillmini.Scripts.Tools;
 
 public class Commands 
 {

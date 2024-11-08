@@ -2,6 +2,8 @@ package io.github.pws.unkillmini.Program.rendering;
 
 import java.io.IOException;
 
+import io.github.pws.unkillmini.Program.backbone.MiniUtils;
+
 public class Window
 {
     public static final int width = 120;
@@ -31,6 +33,19 @@ public class Window
             }
         }
     }
+
+    public static final void fillBlanks()
+    {
+        for (int xx = 0; xx < pixels.length; xx++)
+        {
+            for (int yy = 0; yy < pixels[xx].length; yy++)
+            {
+                if(pixels[xx][yy] == "") pixels[xx][yy] = " ";
+                if(pixelsForeground[xx][yy] == "") pixelsForeground[xx][yy] = Color.rgbFG(0, 0, 0);
+                if(pixelsBackground[xx][yy] == "") pixelsBackground[xx][yy] = Color.rgbBG(0, 0, 0);
+            }
+        }
+    }
     
     public static final void populateWithPixels(String[][] populator, int posX, int posY)
     {
@@ -38,6 +53,8 @@ public class Window
         {
             for (int yy = 0; yy < populator[xx].length; yy++)
             {
+                if(posX < 0) posX = 0;
+                if(posY < 0) posY = 0;
                 pixels[posY + xx][posX + yy] = populator[xx][yy];
             }
         }
@@ -49,6 +66,8 @@ public class Window
         {
             for (int yy = 0; yy < populator[xx].length; yy++)
             {
+                if(posX < 0) posX = 0;
+                if(posY < 0) posY = 0;
                 pixelsForeground[posY + xx][posX + yy] = color;
             }
         }
@@ -60,6 +79,8 @@ public class Window
         {
             for (int yy = 0; yy < populator[xx].length; yy++)
             {
+                if(posX < 0) posX = 0;
+                if(posY < 0) posY = 0;
                 pixelsBackground[posY + xx][posX + yy] = color;
             }
         }
@@ -73,6 +94,7 @@ public class Window
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
+                if(pixels[xx][yy] == null) pixels[xx][yy] = "§";
                 sb.append(pixelsForeground[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]);
             }
             sb.append(Color.RESET);
