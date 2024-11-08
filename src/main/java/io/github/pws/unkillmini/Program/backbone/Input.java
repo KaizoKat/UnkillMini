@@ -34,6 +34,7 @@ public class Input
     public static final int F10 = 68;
     public static final int F11 = 133;
 
+    private static boolean pressed = false;
     public interface CLibrary extends Library 
     {
         CLibrary INSTANCE = Native.load(
@@ -75,9 +76,12 @@ public class Input
             int key =  Platform.isWindows() ? 
             CLibrary.INSTANCE._getch() : 
             CLibrary.INSTANCE.getchar();
+
+            if(!pressed) pressed = true;
             return (char)key;
         }
-
+        else if(pressed)
+            pressed = false;
         return (char)-1;
     }
 
@@ -89,5 +93,10 @@ public class Input
     public static boolean getPressedKey(String key)
     {
         return MiniUtils.CheckCharCaseless(inputKey, (int)key.charAt(0));
+    }
+
+    public static boolean isPressed()
+    {
+        return pressed;
     }
 }
