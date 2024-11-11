@@ -1,6 +1,7 @@
 package io.github.pws.unkillmini.Scripts.UI;
 
 import io.github.pws.unkillmini.Assets.Sprites.spr_inventory;
+import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
 import io.github.pws.unkillmini.Program.backbone.MiniUtils;
@@ -15,7 +16,6 @@ import java.util.List;
 
 public class Inventory extends UI
 {
-    public static boolean open = false;
     private static int itemPage = 0;
     private static int itemCursor = 0;
     private static String[][] ray;
@@ -23,6 +23,11 @@ public class Inventory extends UI
     
     public static List<Item> items = new ArrayList<>();
     
+    public Inventory()
+    {
+        Manager.addScript(this);
+    }
+
     @Override
     public void start() 
     {
@@ -222,7 +227,7 @@ public class Inventory extends UI
         if(open)
         {
             spr.pixels = spr_inventory.buttonPressed;
-            spr.foregorund = Color.rgbFG(255, 255, 255);
+            spr.foreground = Color.rgbFG(255, 255, 255);
             spr.populate();
             
             spr.y = 12;
@@ -234,7 +239,7 @@ public class Inventory extends UI
         else 
         {
             spr.pixels = spr_inventory.button;
-            spr.foregorund = Color.rgbFG(0, 0, 0);
+            spr.foreground = Color.rgbFG(0, 0, 0);
             spr.populate();
         }
     }
@@ -257,7 +262,7 @@ public class Inventory extends UI
 
             String select = "                    ";
             if(i == itemCursor)
-                Window.setPopulatorBackground(Sprite.PopulateWith(select), 2, 14 + i, Color.rgbBG(139, 195, 196));
+                Window.setPopulateBackground(Sprite.PopulateWith(select), 2, 14 + i, Color.rgbBG(139, 195, 196));
 
             Window.populateWithPixels(ray, 3, 14 + i);
         }

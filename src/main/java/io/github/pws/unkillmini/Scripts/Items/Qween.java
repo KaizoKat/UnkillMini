@@ -1,8 +1,8 @@
 package io.github.pws.unkillmini.Scripts.Items;
 
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.Script;
 import io.github.pws.unkillmini.Program.rendering.Window;
-public class Qween implements ScriptableNode
+public class Qween extends Script
 {
     @Override
     public void start()

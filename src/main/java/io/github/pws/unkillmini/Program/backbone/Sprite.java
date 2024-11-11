@@ -9,14 +9,14 @@ public class Sprite {
     public int x = 0;
     public int y = 0;
     public String background = Color.rgbBG(0, 0, 0);
-    public String foregorund = Color.rgbFG(255, 255, 255);
+    public String foreground = Color.rgbFG(255, 255, 255);
     
     public void populate()
     {
         String[][] ray = prepare(PopulateWith(pixels));
         Window.populateWithPixels(ray, x, y);
-        Window.setPopulatorBackground(ray, x, y, background);
-        Window.setPopulatorForeground(ray, x, y, foregorund);
+        Window.setPopulateBackground(ray, x, y, background);
+        Window.setPopulateForeground(ray, x, y, foreground);
     }
 
     public final String[][] prepare(String[][] original)

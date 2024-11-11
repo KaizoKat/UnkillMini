@@ -58,11 +58,11 @@ public class Input
     
     public static boolean check(String word)
     {
-        if(line.chars().count() >= 2)
+        if((long) line.length() >= 2)
         {
             for(String part : line.split(" "))
             {
-                if(part.length() != 0 && word.toUpperCase().contains(part.toUpperCase()))
+                if(!part.isEmpty() && word.toUpperCase().contains(part.toUpperCase()))
                     return true;
             }
         }

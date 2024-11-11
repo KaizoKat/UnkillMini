@@ -1,6 +1,6 @@
 package io.github.pws.unkillmini.Program.backbone;
 
-public interface ScriptableNode 
+public abstract class Script
 {
     public abstract void start();
     public abstract void update();

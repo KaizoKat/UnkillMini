@@ -1,8 +1,8 @@
 package io.github.pws.unkillmini.Scripts.Items;
 
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.Script;
 import io.github.pws.unkillmini.Program.rendering.Window;
-public class Kale implements ScriptableNode
+public class Kale extends Script
 {
     @Override
     public void start()

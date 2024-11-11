@@ -5,6 +5,7 @@
 package io.github.pws.unkillmini.Scripts.UI;
 
 import io.github.pws.unkillmini.Assets.Sprites.spr_equipment;
+import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
 import io.github.pws.unkillmini.Program.backbone.MiniUtils;
@@ -14,12 +15,15 @@ import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Equipment extends UI
 {
-    public static boolean open = false;
     public static boolean charms = false;
-    
     public static Item[] equippedItems = new Item[7];
     private static int slotIndex = 0;
     private static spr_equipment spr = new spr_equipment();
+
+    public Equipment()
+    {
+        Manager.addScript(this);
+    }
 
     @Override
     public void start() 
@@ -76,7 +80,7 @@ public class Equipment extends UI
         if(open)
         {
             spr.pixels = spr_equipment.buttonPressed;
-            spr.foregorund = Color.rgbFG(255, 255, 255);
+            spr.foreground = Color.rgbFG(255, 255, 255);
             spr.populate();
             
             spr.y = 5;
@@ -86,7 +90,7 @@ public class Equipment extends UI
             spr.x = 25;
             spr.y = 7;
             spr.pixels = spr_equipment.eqSlots;
-            spr.foregorund = Color.rgbFG(201, 212, 212);
+            spr.foreground = Color.rgbFG(201, 212, 212);
             spr.populate();
             
             char cBor = ' ';
@@ -197,7 +201,7 @@ public class Equipment extends UI
         else 
         {
             spr.pixels = spr_equipment.button;
-            spr.foregorund = Color.rgbFG(0, 0, 0);
+            spr.foreground = Color.rgbFG(0, 0, 0);
             spr.populate();
         }
     }
@@ -288,14 +292,14 @@ public class Equipment extends UI
         for(String s : lamda) sb.append(s);
         
         spr.background = borderBG;
-        spr.foregorund = borderFG;
+        spr.foreground = borderFG;
         spr.x = poX-1;
         spr.y = poY-1;
         spr.pixels = sb.toString();
         spr.populate();
         
         spr.background = selectBG;
-        spr.foregorund = selectFG;
+        spr.foreground = selectFG;
         spr.x = poX;
         spr.y = poY;
         spr.pixels = area;

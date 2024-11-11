@@ -1,11 +1,10 @@
 package io.github.pws.unkillmini.Scripts.UI;
 
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
-public class MakeDisclaimer implements ScriptableNode
+public class MakeDisclaimer
 {   
     private String disclaimer = 
     """
@@ -43,24 +42,13 @@ public class MakeDisclaimer implements ScriptableNode
     ########################################################################################################################
     """;
     
-    @Override
-    public void start()
+    public void build()
     {
         String[][] disclaimerStringses = Sprite.PopulateWith(disclaimer);
         Window.populateWithPixels(disclaimerStringses, 0, 0);
-        Window.setPopulatorForeground(disclaimerStringses, 0, 0, Color.rgbFG(255, 255, 255));
-        Window.setPopulatorBackground(disclaimerStringses, 0, 0, Color.rgbBG(209, 65, 65));
+        Window.setPopulateForeground(disclaimerStringses, 0, 0, Color.rgbFG(255, 255, 255));
+        Window.setPopulateBackground(disclaimerStringses, 0, 0, Color.rgbBG(209, 65, 65));
         Window.draw();
         Window.pause();
-    }
-
-    @Override
-    public void update()
-    {
-    }
-
-    @Override
-    public void end()
-    {
     }
 }

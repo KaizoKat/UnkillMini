@@ -2,11 +2,17 @@ package io.github.pws.unkillmini.Scripts.UI;
 
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
-public class MakeBorder implements ScriptableNode
+import io.github.pws.unkillmini.Program.Manager;
+import io.github.pws.unkillmini.Program.backbone.Script;
+public class MakeBorder extends Script
 {   
     private String[][] border;
     
+    public MakeBorder()
+    {
+        Manager.addScript(this);
+    }
+
     @Override
     public void start()
     {

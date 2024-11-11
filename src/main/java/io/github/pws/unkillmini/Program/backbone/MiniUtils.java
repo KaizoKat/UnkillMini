@@ -22,6 +22,6 @@ public class MiniUtils
 
     public static boolean CheckCharCaseless(int char1, int char2)
     {
-        return String.valueOf((char)char1).toUpperCase().equals(String.valueOf((char)char2).toUpperCase());
+        return String.valueOf((char)char1).equalsIgnoreCase(String.valueOf((char)char2));
     }
 }

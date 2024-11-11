@@ -1,12 +1,17 @@
 package io.github.pws.unkillmini.Scripts.UI;
 
+import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.UI;
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.Script;
 
-public class Help implements ScriptableNode
+public class Help extends Script
 { 
-    
+    public Help()
+    {
+        Manager.addScript(this);
+    }
+
     @Override
     public void start()
     {
@@ -23,21 +28,15 @@ public class Help implements ScriptableNode
 
             switch (focus)
             {
-                case "inv" ->
-                {
-                    Inventory.open = true;
-                }
-                case "equ" ->
-                {
-                    Equipment.open = true;
-                }
+                case "inv" -> Inventory.open = true;
+                case "equ" -> Equipment.open = true;
                 default -> {}
             }
         }
 
-        if(Inventory.open && !Equipment.open && focus != "inv")
+        if(Inventory.open && !Equipment.open && !focus.equals("inv"))
             UI.addNewFocus("inv");
-        else if(!Inventory.open && Equipment.open && focus != "equ")
+        else if(!Inventory.open && Equipment.open && !focus.equals("equ"))
             UI.addNewFocus("equ");
 
         /*

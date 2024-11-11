@@ -1,8 +1,8 @@
 package io.github.pws.unkillmini.Scripts.Items;
 
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.Script;
 import io.github.pws.unkillmini.Program.rendering.Window;
-public class Jumper implements ScriptableNode
+public class Jumper extends Script
 {
     @Override
     public void start()

@@ -1,10 +1,10 @@
 package io.github.pws.unkillmini.Program.rendering;
 
-import io.github.pws.unkillmini.Program.backbone.ScriptableNode;
+import io.github.pws.unkillmini.Program.backbone.Script;
 
-public class UI implements ScriptableNode
+public class UI extends Script
 {
-    protected static boolean open;
+    public static boolean open;
     public static String[] prevFocused = new String[10];
     @Override
     public void start() 
@@ -20,13 +20,12 @@ public class UI implements ScriptableNode
     @Override
     public void end() {}
 
-    public static final void addNewFocus(String focus)
+    public static void addNewFocus(String focus)
     {
-        for(int i = 8; i >= 0; i--)
-        {
-            prevFocused[i+1] = prevFocused[i];
+        for (int i = 8; i >= 0; i--) {
+            prevFocused[i + 1] = prevFocused[i];
         }
-        
+
         prevFocused[0] = focus;
         //Window.print(prevFocused[0] + ", " + prevFocused[1] + ", " + prevFocused[2] + ", " + prevFocused[3] + ", " + prevFocused[4] + ", " + prevFocused[5] + ", " + prevFocused[6] + ", " + prevFocused[7] + ", " + prevFocused[8] + ", " + prevFocused[9]);
     }

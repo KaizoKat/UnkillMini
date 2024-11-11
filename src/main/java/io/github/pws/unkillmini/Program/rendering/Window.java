@@ -2,8 +2,6 @@ package io.github.pws.unkillmini.Program.rendering;
 
 import java.io.IOException;
 
-import io.github.pws.unkillmini.Program.backbone.MiniUtils;
-
 public class Window
 {
     public static final int width = 120;
@@ -16,13 +14,16 @@ public class Window
     
     private static String suffix = "";
 
-    public static final void compose()
+    public static void create()
     {
         setWindowsTitle(apkName);
         pixels = new String[height][width];
         pixelsForeground = new String[height][width];
         pixelsBackground = new String[height][width];
+    }
 
+    public static void compose()
+    {
         for (int xx = 0; xx < pixels.length; xx++)
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
@@ -34,20 +35,20 @@ public class Window
         }
     }
 
-    public static final void fillBlanks()
+    public static void fillBlanks()
     {
         for (int xx = 0; xx < pixels.length; xx++)
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
-                if(pixels[xx][yy] == "") pixels[xx][yy] = " ";
-                if(pixelsForeground[xx][yy] == "") pixelsForeground[xx][yy] = Color.rgbFG(0, 0, 0);
-                if(pixelsBackground[xx][yy] == "") pixelsBackground[xx][yy] = Color.rgbBG(0, 0, 0);
+                if(pixels[xx][yy].isEmpty()) pixels[xx][yy] = " ";
+                if(pixelsForeground[xx][yy].isEmpty()) pixelsForeground[xx][yy] = Color.rgbFG(0, 0, 0);
+                if(pixelsBackground[xx][yy].isEmpty()) pixelsBackground[xx][yy] = Color.rgbBG(0, 0, 0);
             }
         }
     }
     
-    public static final void populateWithPixels(String[][] populator, int posX, int posY)
+    public static void populateWithPixels(String[][] populator, int posX, int posY)
     {
         for (int xx = 0; xx < populator.length; xx++)
         {
@@ -60,7 +61,7 @@ public class Window
         }
     }
     
-    public static final void setPopulatorForeground(String[][] populator, int posX, int posY, String color)
+    public static void setPopulateForeground(String[][] populator, int posX, int posY, String color)
     {
         for (int xx = 0; xx < populator.length; xx++)
         {
@@ -73,7 +74,7 @@ public class Window
         }
     }
     
-    public static final void setPopulatorBackground(String[][] populator, int posX, int posY, String color)
+    public static void setPopulateBackground(String[][] populator, int posX, int posY, String color)
     {
         for (int xx = 0; xx < populator.length; xx++)
         {
@@ -86,7 +87,7 @@ public class Window
         }
     }
 
-    public static final void draw()
+    public static void draw()
     {
         StringBuilder sb = new StringBuilder();
         System.out.print("\033[0;0H");
@@ -94,13 +95,16 @@ public class Window
         {
             for (int yy = 0; yy < pixels[xx].length; yy++)
             {
-                if(pixels[xx][yy] == null) pixels[xx][yy] = "§";
+                if(pixels[xx][yy] == null) pixels[xx][yy] = "␀";
                 sb.append(pixelsForeground[xx][yy]).append(pixelsBackground[xx][yy]).append(pixels[xx][yy]);
             }
             sb.append(Color.RESET);
+            
+            if(xx != pixels.length-1) 
+                sb.append("\n");
         }
 
-        sb.append(suffix + "\n");
+        sb.append(suffix).append("\n");
         System.out.print(sb.toString());
         suffix = "";
         System.out.flush();
@@ -109,13 +113,13 @@ public class Window
     public static void clear()
     {
         try { new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {}
+        } catch (IOException | InterruptedException ignored) {}
     }
     
     public static void pause()
     {
         try { new ProcessBuilder("cmd", "/c", "PAUSE").inheritIO().start().waitFor();  
-        } catch (IOException | InterruptedException e) {}
+        } catch (IOException | InterruptedException ignored) {}
     }
     
     public static void print(String _suffix)
@@ -136,7 +140,7 @@ public class Window
     public static void setWindowsTitle(String title) 
     {
         try { new ProcessBuilder("cmd", "/c", "title " + title).inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {}
+        } catch (IOException | InterruptedException ignored) {}
 
     }
 }
