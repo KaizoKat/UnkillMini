@@ -1,12 +1,15 @@
 package io.github.pws.unkillmini.Scripts.UI;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.backbone.Script;
+import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Help extends Script
-{ 
+{
     public Help()
     {
         Manager.addScript(this);
@@ -15,14 +18,14 @@ public class Help extends Script
     @Override
     public void start()
     {
-        
+        Application.input.addMapping(NativeKeyEvent.VC_TAB, "Tab");
     }
 
     @Override
     public void update()
     {
         String focus = UI.prevFocused[0];
-        if(Input.getPressedKey() == Input.TAB)
+        if(Application.input.isPressed("Tab"))
         {
             UI.addNewFocus(UI.prevFocused[1]);
 
@@ -30,15 +33,27 @@ public class Help extends Script
             {
                 case "inv" -> Inventory.open = true;
                 case "equ" -> Equipment.open = true;
-                default -> {}
+                case "opt" -> Options.open = true;
+                default ->
+                {
+
+                }
             }
         }
 
-        if(Inventory.open && !Equipment.open && !focus.equals("inv"))
-            UI.addNewFocus("inv");
-        else if(!Inventory.open && Equipment.open && !focus.equals("equ"))
-            UI.addNewFocus("equ");
+        if(focus == "null")
+        {
+            if(Inventory.open) UI.addNewFocus("inv");
+            else if(Equipment.open) UI.addNewFocus("equ");
+            else if(Options.open) UI.addNewFocus("opt");
+        }
 
+        Window.print
+        (
+            UI.prevFocused[0] + " " + UI.prevFocused[1] + " " + UI.prevFocused[2] + " " + UI.prevFocused[3] + " " +
+            UI.prevFocused[4] + " " + UI.prevFocused[5] + " " + UI.prevFocused[6] + " " + UI.prevFocused[7] + " " +
+            UI.prevFocused[8] + " " + UI.prevFocused[9]
+        );
         /*
         if(Input.check(Commands.help))
         {

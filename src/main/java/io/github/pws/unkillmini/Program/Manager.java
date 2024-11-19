@@ -3,18 +3,23 @@ package io.github.pws.unkillmini.Program;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.pws.unkillmini.Program.backbone.Input;
-import io.github.pws.unkillmini.Program.backbone.Script;
+import io.github.pws.unkillmini.Application;
+import io.github.pws.unkillmini.Program.backbone.*;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Manager 
 {
-    private static List<Script> scripts = new ArrayList<>();
-    public static boolean run = true;
+    public static List<Script> scripts = new ArrayList<>();
 
-    private static final int TARGET_FPS = 60;
-    private static final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+    public static final boolean displayFramerate = true;
+    public static final int targetFps = 120;
+
+    public static int framerate = 0;
+    public static final long optimalTime = 1_000_000_000 / targetFps;
+
+    public static boolean run = true;
     public static double delta;
+
     public static void addScript(Script script)
     {
         scripts.add(script);
@@ -36,6 +41,14 @@ public class Manager
         }
     }
 
+    private static void updateAll()
+    {
+        for (Script s : scripts)
+        {
+            s.update();
+        }
+    }
+
     public static void loop()
     {   
         Window.compose();
@@ -54,24 +67,24 @@ public class Manager
                 long now = System.nanoTime();
                 long updateLength = now - lastLoopTime;
                 lastLoopTime = now;
-                delta = updateLength / ((double) OPTIMAL_TIME);
-                Input.scanInput();
+                delta = updateLength / ((double) optimalTime);
 
-                FPSCounter.countFrame();
 
                 Window.compose();
+                Application.input.processInputQueue();
 
-                for (Script s : scripts)
-                {
-                    s.update();
-                }
+                FPSCounter.countFrame();
+                framerate = FPSCounter.getCurrentFrameCount();
+                if(displayFramerate) displayFPS();
 
-                Window.fillBlanks();
+                updateAll();
+
                 Window.draw();
-
+                Application.input.updateStates();
                 try {
-                    long gameTime = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1_000_000;
-                    if (gameTime > 0) { Thread.sleep(gameTime);}
+
+                    long gameTime = (lastLoopTime - System.nanoTime() + optimalTime) / 1_000_000;
+                    if (gameTime > 0) Thread.sleep(gameTime);
                 } catch (InterruptedException e) { e.printStackTrace(); }
             }
             else
@@ -82,25 +95,18 @@ public class Manager
         }
     }
 
-    private static final void staticSettings()
+    private static void staticSettings()
     {
         Window.hideCursor();
     }
 
-    public class FPSCounter 
+    private static void displayFPS()
     {
-        private static int frameCount = 0;
-        private static long lastFPSCheck = System.nanoTime();
-        
-        public static void countFrame() 
-        {
-            frameCount++;
-            if (System.nanoTime() - lastFPSCheck >= 1_000_000_000) 
-            {
-                Window.print("FPS: " + frameCount);
-                frameCount = 0;
-                lastFPSCheck = System.nanoTime();
-            }
-        }
+        int currentRate = FPSCounter.getCurrentFrameCount();
+        String output = "FPS: N / A";
+        if(currentRate != 0)
+            output = "FPS: " + currentRate + " / " + targetFps;
+
+        Window.populateWithPixels(Sprite.PopulateWith(output),new Vector2(2,1));
     }
 }

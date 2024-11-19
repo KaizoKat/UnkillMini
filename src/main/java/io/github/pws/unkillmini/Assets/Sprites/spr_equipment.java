@@ -14,7 +14,7 @@ public class spr_equipment extends Sprite
     public static final String buttonPressed =
     """
     >>                                                                                 <<
-    >>                                   Equipment                                     <<
+    >>                                  Equipment                                      <<
     >>=================================================================================<<
     """;
     

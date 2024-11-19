@@ -4,7 +4,6 @@ import io.github.pws.unkillmini.Program.backbone.Script;
 
 public class UI extends Script
 {
-    public static boolean open;
     public static String[] prevFocused = new String[10];
     @Override
     public void start() 

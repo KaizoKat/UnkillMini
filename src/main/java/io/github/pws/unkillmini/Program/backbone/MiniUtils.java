@@ -20,6 +20,12 @@ public class MiniUtils
         return var;
     }
 
+    /**
+     * Check if two chars independent of weaterh they are upper case or lower case are the same.
+     * @param char1 Fitst character
+     * @param char2 Second character
+     * @return true if both are the same.
+     */
     public static boolean CheckCharCaseless(int char1, int char2)
     {
         return String.valueOf((char)char1).equalsIgnoreCase(String.valueOf((char)char2));

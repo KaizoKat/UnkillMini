@@ -1,102 +1,180 @@
 package io.github.pws.unkillmini.Program.backbone;
 
-import java.util.Scanner;
+import com.github.kwhat.jnativehook.GlobalScreen;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
 
-import com.sun.jna.Library;
-import com.sun.jna.Native;
-import com.sun.jna.Platform;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-
-public class Input 
+public class Input implements NativeKeyListener
 {
-    public static String line = "";
-    public static int inputKey = -1;
-    public static final Scanner scan = new Scanner(System.in);
+    private final Map<String, List<Integer>> actionMappings = new HashMap<>();
+    private final Map<Integer, KeyState> keyStates = new HashMap<>();
+    private final Queue<InputEvent> inputQueue = new LinkedList<>();
 
-    public static final int TAB = 9;
-    public static final int ENTER = 13;
-    public static final int ESC= 27;
-    public static final int SPACE= 32;
-    public static final int UP= 72;
-    public static final int LEFT= 75;
-    public static final int RIGHT = 77;
-    public static final int DOWN = 80;
-    public static final int F1 = 59;
-    public static final int F2 = 60;
-    public static final int F3 = 61;
-    public static final int F4 = 62;
-    public static final int F5 = 63;
-    public static final int F6 = 64;
-    public static final int F7 = 65;
-    public static final int F8 = 66;
-    public static final int F9 = 67;
-    public static final int F12 = 134;
-    public static final int F10 = 68;
-    public static final int F11 = 133;
-
-    private static boolean pressed = false;
-    public interface CLibrary extends Library 
+    enum KeyState
     {
-        CLibrary INSTANCE = Native.load(
-            Platform.isWindows() ? "msvcrt" : "c",
-            CLibrary.class
-        );
-        int _kbhit();
-        int _getch();
-        int getchar();
+        none,
+        pressed,
+        held,
+        released
     }
 
-    public static void scan()
+    private static class InputEvent
     {
-        line = scan.nextLine();
-    }
+        int keyCode;
+        boolean pressed;
 
-    public static void scanInput()
-    {
-        inputKey = assign();
-    }
-    
-    public static boolean check(String word)
-    {
-        if((long) line.length() >= 2)
+        InputEvent(int keyCode, boolean pressed)
         {
-            for(String part : line.split(" "))
+            this.keyCode = keyCode;
+            this.pressed = pressed;
+        }
+    }
+
+    public Input()
+    {
+        // Disable JNativeHook logging
+        Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+        logger.setLevel(Level.OFF);
+        logger.setUseParentHandlers(false);
+
+        try
+        {
+            GlobalScreen.registerNativeHook();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        GlobalScreen.addNativeKeyListener(this);
+    }
+
+    /**
+     * Add a mapping between a key and an action.
+     * Multiple keys can be mapped to the same action.
+     */
+    public void addMapping(int keyCode, String action)
+    {
+        actionMappings.computeIfAbsent(action, k -> new ArrayList<>()).add(keyCode);
+    }
+
+    /**
+     * Check if an action is held (true as long as the key is pressed).
+     */
+    public boolean isHeld(String action)
+    {
+        List<Integer> keys = actionMappings.getOrDefault(action, Collections.emptyList());
+        for (int key : keys)
+        {
+            if (keyStates.getOrDefault(key, KeyState.none) == KeyState.held)
             {
-                if(!part.isEmpty() && word.toUpperCase().contains(part.toUpperCase()))
-                    return true;
+                return true;
             }
         }
         return false;
     }
 
-    public static char assign() 
+    /**
+     * Check if an action is pressed (true once when the key is first pressed).
+     */
+    public boolean isPressed(String action)
     {
-        if (CLibrary.INSTANCE._kbhit() != 0)
+        List<Integer> keys = actionMappings.getOrDefault(action, Collections.emptyList());
+        for (int key : keys)
         {
-            int key =  Platform.isWindows() ? 
-            CLibrary.INSTANCE._getch() : 
-            CLibrary.INSTANCE.getchar();
-
-            if(!pressed) pressed = true;
-            return (char)key;
+            if (keyStates.getOrDefault(key, KeyState.none) == KeyState.pressed)
+            {
+                return true;
+            }
         }
-        else if(pressed)
-            pressed = false;
-        return (char)-1;
+        return false;
     }
 
-    public static char getPressedKey()
+    /**
+     * Check if an action is released (true once when the key is first released).
+     */
+    public boolean isReleased(String action)
     {
-        return (char)inputKey;
+        List<Integer> keys = actionMappings.getOrDefault(action, Collections.emptyList());
+        for (int key : keys)
+        {
+            if (keyStates.getOrDefault(key, KeyState.none) == KeyState.released)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public static boolean getPressedKey(String key)
+    /**
+     * Process the input queue and update key states.
+     */
+    public void processInputQueue()
     {
-        return MiniUtils.CheckCharCaseless(inputKey, (int)key.charAt(0));
+        while (!inputQueue.isEmpty())
+        {
+            InputEvent event = inputQueue.poll();
+            int keyCode = event.keyCode;
+
+            if (event.pressed)
+            {
+                if (keyStates.getOrDefault(keyCode, KeyState.none) == KeyState.none)
+                {
+                    keyStates.put(keyCode, KeyState.pressed);
+                }
+                else
+                {
+                    keyStates.put(keyCode, KeyState.held);
+                }
+            }
+            else
+            {
+                keyStates.put(keyCode, KeyState.released);
+            }
+        }
     }
 
-    public static boolean isPressed()
+    /**
+     * Update key states at the end of the frame.
+     * Transitions:
+     * - pressed -> held
+     * - released -> none
+     */
+    public void updateStates()
     {
-        return pressed;
+        keyStates.replaceAll((key, state) -> {
+            if (state == KeyState.pressed)
+            {
+                return KeyState.held;
+            }
+            if (state == KeyState.released)
+            {
+                return KeyState.none;
+            }
+            return state;
+        });
+    }
+
+    @Override
+    public void nativeKeyPressed(NativeKeyEvent e)
+    {
+        int keyCode = e.getKeyCode();
+        inputQueue.add(new InputEvent(keyCode, true));
+    }
+
+    @Override
+    public void nativeKeyReleased(NativeKeyEvent e)
+    {
+        int keyCode = e.getKeyCode();
+        inputQueue.add(new InputEvent(keyCode, false));
+    }
+
+    @Override
+    public void nativeKeyTyped(NativeKeyEvent e)
+    {
+        // Unhandled
     }
 }

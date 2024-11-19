@@ -1,8 +1,9 @@
-package io.github.pws.unkillmini.Scripts.Rooms;
+package io.github.pws.unkillmini.Scripts.World.Rooms;
 
 import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Room;
 import io.github.pws.unkillmini.Program.backbone.Script;
+import io.github.pws.unkillmini.Program.backbone.Vector2;
 
 public class SmallRoom extends Script
 {
@@ -17,10 +18,8 @@ public class SmallRoom extends Script
     @Override
     public void start() 
     {
-        r.transform.x = 20;
-        r.transform.y = 5;
-        rS.transform.x = 5;
-        rS.transform.y = 5;
+        r.spr.pos = new Vector2(-5, -5);
+        rS.spr.pos = new Vector2(5,5);
 
         r.setWidth(20);
         r.setHeight(10);

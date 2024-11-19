@@ -21,7 +21,7 @@ public class MakeBorder extends Script
     @Override
     public void update()
     {
-        generateBorder(Window.width, Window.height);
+        generateBorder(Window.width, 32);
         for (int xx = 0; xx < border.length; xx++) 
         {
             for (int yy = 0; yy < border[xx].length; yy++) 

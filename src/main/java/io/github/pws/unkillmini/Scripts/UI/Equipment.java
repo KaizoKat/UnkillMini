@@ -4,6 +4,8 @@
  */
 package io.github.pws.unkillmini.Scripts.UI;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Assets.Sprites.spr_equipment;
 import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Input;
@@ -15,6 +17,7 @@ import io.github.pws.unkillmini.Program.rendering.Window;
 
 public class Equipment extends UI
 {
+    public static boolean open;
     public static boolean charms = false;
     public static Item[] equippedItems = new Item[7];
     private static int slotIndex = 0;
@@ -28,6 +31,7 @@ public class Equipment extends UI
     @Override
     public void start() 
     {
+        Application.input.addMapping(NativeKeyEvent.VC_R, "Equipment");
     }
 
     @Override
@@ -35,10 +39,11 @@ public class Equipment extends UI
     {
         //boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false;
         
-        if(Input.getPressedKey("r"))
+        if(Application.input.isPressed("Equipment"))
         {
             open = !open;
             if(open) addNewFocus("equ");
+            else addNewFocus("null");
             
             /*
             if(open && Input.check(Commands.check + " left arm"))
@@ -62,19 +67,18 @@ public class Equipment extends UI
             */
         }
         
-        if(open && prevFocused[0] == "equ")
+        if(open && prevFocused[0].equals("equ"))
         {
-            if(Input.getPressedKey() == Input.LEFT || Input.getPressedKey() == Input.DOWN)
+            if(Application.input.isPressed("Left") || Application.input.isPressed("Down"))
                 slotIndex++;
-            else if (Input.getPressedKey() == Input.RIGHT || Input.getPressedKey() == Input.UP)
+            else if (Application.input.isPressed("Right") || Application.input.isPressed("Up"))
                 slotIndex--;
         }
 
-
         slotIndex = MiniUtils.ClampInt(slotIndex, 0, 7);
 
-        spr.x = 23;
-        spr.y = 28;
+        spr.pos.x = 23;
+        spr.pos.y = 28;
         spr.background = Color.rgbBG(126, 167, 168);
 
         if(open)
@@ -83,12 +87,12 @@ public class Equipment extends UI
             spr.foreground = Color.rgbFG(255, 255, 255);
             spr.populate();
             
-            spr.y = 5;
+            spr.pos.y = 5;
             spr.pixels = spr_equipment.eqBorder;
             spr.populate();
             
-            spr.x = 25;
-            spr.y = 7;
+            spr.pos.x = 25;
+            spr.pos.y = 7;
             spr.pixels = spr_equipment.eqSlots;
             spr.foreground = Color.rgbFG(201, 212, 212);
             spr.populate();
@@ -293,15 +297,15 @@ public class Equipment extends UI
         
         spr.background = borderBG;
         spr.foreground = borderFG;
-        spr.x = poX-1;
-        spr.y = poY-1;
+        spr.pos.x = poX-1;
+        spr.pos.y = poY-1;
         spr.pixels = sb.toString();
         spr.populate();
         
         spr.background = selectBG;
         spr.foreground = selectFG;
-        spr.x = poX;
-        spr.y = poY;
+        spr.pos.x = poX;
+        spr.pos.y = poY;
         spr.pixels = area;
         spr.populate();
     }

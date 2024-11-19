@@ -1,14 +1,16 @@
 package io.github.pws.unkillmini.Scripts.UI;
 
+import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
+import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Assets.Sprites.spr_inventory;
 import io.github.pws.unkillmini.Program.Manager;
-import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
 import io.github.pws.unkillmini.Program.backbone.MiniUtils;
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
+import io.github.pws.unkillmini.Program.backbone.Vector2;
 import io.github.pws.unkillmini.Assets.Items;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 
 public class Inventory extends UI
 {
+    public static boolean open;
     private static int itemPage = 0;
     private static int itemCursor = 0;
     private static String[][] ray;
@@ -32,8 +35,8 @@ public class Inventory extends UI
     public void start() 
     {
         items = Items.list;
+        Application.input.addMapping(NativeKeyEvent.VC_E, "Inventory");
     }
-
 
     int tempEnterCount;
     @Override
@@ -125,87 +128,81 @@ public class Inventory extends UI
         }
         */
 
-        if(Input.getPressedKey("e"))
+        if(Application.input.isPressed("Inventory"))
         {
             open = !open;
             if(open) addNewFocus("inv");
+            else addNewFocus("null");
         }
 
+        inputMap:
         if(open && prevFocused[0] == "inv")
         {
-            switch (Input.getPressedKey()) 
+            if(Application.input.isPressed("Up"))
             {
-                case Input.UP ->
-                {
-                    itemCursor--;
-                }
-                case Input.DOWN ->
-                {
-                    itemCursor++;
-                }
-                case Input.LEFT ->
-                {
-                    itemPage--;
-                }
-                case Input.RIGHT ->
-                {
-                    itemPage++;
-                }
-                case Input.ENTER ->
-                {
-                    if(items.toArray().length == 0)
-                        break;
+                itemCursor--;
+            }
+            else if(Application.input.isPressed("Down"))
+            {
+                itemCursor++;
+            }
+            else if(Application.input.isPressed("Left"))
+            {
+                itemPage--;
+            }
+            else if(Application.input.isPressed("Right"))
+            {
+                itemPage++;
+            }
+            else if(Application.input.isPressed("Enter"))
+            {
+                if(items.toArray().length == 0)
+                    break inputMap;
 
-                    int itemIndex = (itemPage * 12) + itemCursor;
-                    Item it = items.get(itemIndex);
-                    if(it.stats.equipmentSlots.equals(""))
-                    {
-                        it.runner.update();
-                        it.stats.count--;
-                        items.set(itemIndex, it);
-                    }
-                    else
-                    {
-                        boolean replace = false;
-                        Item toReplace = null;
-
-                        Window.print(it.name + " equipped!");
-
-                        for(String slot : it.stats.equipmentSlots.split(" "))
-                        {
-                            if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
-                            {
-                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
-                                it.stats.count = 0;
-                            }
-                            else 
-                            {
-                                toReplace = Equipment.equippedItems[Integer.parseInt(slot)];
-                                replace = true;
-                                break;
-                            }
-                        }
-                        
-                        if(replace)
-                        {
-                            for(String slot : toReplace.stats.equipmentSlots.split(" "))
-                                Equipment.equippedItems[Integer.parseInt(slot)] = null;
-                            
-                            for(String slot : it.stats.equipmentSlots.split(" "))
-                                Equipment.equippedItems[Integer.parseInt(slot)] = it;
-                            
-                            it.stats.count = 0;
-                            AddItem(toReplace);
-                        }
-                    }
-                    
+                int itemIndex = (itemPage * 12) + itemCursor;
+                Item it = items.get(itemIndex);
+                if(it.stats.equipmentSlots.equals(""))
+                {
+                    it.runner.update();
+                    it.stats.count--;
                     items.set(itemIndex, it);
                 }
-
-                default ->
+                else
                 {
-                    
+                    boolean replace = false;
+                    Item toReplace = null;
+
+                    Window.print(it.name + " equipped!");
+
+                    for(String slot : it.stats.equipmentSlots.split(" "))
+                    {
+                        if(Equipment.equippedItems[Integer.parseInt(slot)] == null)
+                        {
+                            Equipment.equippedItems[Integer.parseInt(slot)] = it;
+                            it.stats.count = 0;
+                        }
+                        else
+                        {
+                            toReplace = Equipment.equippedItems[Integer.parseInt(slot)];
+                            replace = true;
+                            break;
+                        }
+                    }
+
+                    if(replace)
+                    {
+                        for(String slot : toReplace.stats.equipmentSlots.split(" "))
+                            Equipment.equippedItems[Integer.parseInt(slot)] = null;
+
+                        for(String slot : it.stats.equipmentSlots.split(" "))
+                            Equipment.equippedItems[Integer.parseInt(slot)] = it;
+
+                        it.stats.count = 0;
+                        AddItem(toReplace);
+                    }
                 }
+
+                items.set(itemIndex, it);
             }
         }
 
@@ -220,8 +217,8 @@ public class Inventory extends UI
         itemPage = MiniUtils.ClampInt(itemPage, 0, pageCount);
         itemCursor = MiniUtils.ClampInt(itemCursor, 0, max);
         
-        spr.x = 1;
-        spr.y = 28;
+        spr.pos.x = 1;
+        spr.pos.y = 28;
         spr.background = Color.rgbBG(126, 167, 168);
         
         if(open)
@@ -230,7 +227,7 @@ public class Inventory extends UI
             spr.foreground = Color.rgbFG(255, 255, 255);
             spr.populate();
             
-            spr.y = 12;
+            spr.pos.y = 12;
             spr.pixels = spr_inventory.invBoder;
             spr.populate();
             
@@ -262,9 +259,9 @@ public class Inventory extends UI
 
             String select = "                    ";
             if(i == itemCursor)
-                Window.setPopulateBackground(Sprite.PopulateWith(select), 2, 14 + i, Color.rgbBG(139, 195, 196));
+                Window.populateBackground(Sprite.PopulateWith(select), new Vector2(2, 14 + i), Color.rgbBG(139, 195, 196));
 
-            Window.populateWithPixels(ray, 3, 14 + i);
+            Window.populateWithPixels(ray, new Vector2(3, 14 + i));
         }
         
         if (pageCount == 0) 
@@ -283,7 +280,7 @@ public class Inventory extends UI
             ray = Sprite.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
         }
         
-        Window.populateWithPixels(ray, 1, 26);
+        Window.populateWithPixels(ray, new Vector2(1, 26));
     }
     
     public static void AddItem(Item it)
