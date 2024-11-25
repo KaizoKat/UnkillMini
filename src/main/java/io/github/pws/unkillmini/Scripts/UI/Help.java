@@ -8,24 +8,19 @@ import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.backbone.Script;
 import io.github.pws.unkillmini.Program.rendering.Window;
 
-public class Help extends Script
+public class Help implements Script
 {
-    public Help()
-    {
-        Manager.addScript(this);
-    }
-
     @Override
     public void start()
     {
-        Application.input.addMapping(NativeKeyEvent.VC_TAB, "Tab");
+        Manager.input.addMapping(NativeKeyEvent.VC_TAB, "Tab");
     }
 
     @Override
     public void update()
     {
         String focus = UI.prevFocused[0];
-        if(Application.input.isPressed("Tab"))
+        if(Manager.input.isPressed("Tab"))
         {
             UI.addNewFocus(UI.prevFocused[1]);
 
@@ -48,12 +43,12 @@ public class Help extends Script
             else if(Options.open) UI.addNewFocus("opt");
         }
 
-        Window.print
-        (
-            UI.prevFocused[0] + " " + UI.prevFocused[1] + " " + UI.prevFocused[2] + " " + UI.prevFocused[3] + " " +
-            UI.prevFocused[4] + " " + UI.prevFocused[5] + " " + UI.prevFocused[6] + " " + UI.prevFocused[7] + " " +
-            UI.prevFocused[8] + " " + UI.prevFocused[9]
-        );
+//        Window.print
+//        (
+//            UI.prevFocused[0] + " " + UI.prevFocused[1] + " " + UI.prevFocused[2] + " " + UI.prevFocused[3] + " " +
+//            UI.prevFocused[4] + " " + UI.prevFocused[5] + " " + UI.prevFocused[6] + " " + UI.prevFocused[7] + " " +
+//            UI.prevFocused[8] + " " + UI.prevFocused[9]
+//        );
         /*
         if(Input.check(Commands.help))
         {

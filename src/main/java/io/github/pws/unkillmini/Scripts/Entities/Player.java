@@ -1,67 +1,55 @@
 package io.github.pws.unkillmini.Scripts.Entities;
 
-import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Program.Manager;
-import io.github.pws.unkillmini.Program.backbone.Input;
-import io.github.pws.unkillmini.Program.backbone.Script;
-import io.github.pws.unkillmini.Program.backbone.Sprite;
-import io.github.pws.unkillmini.Program.backbone.Vector2;
-import io.github.pws.unkillmini.Program.rendering.Color;
+import io.github.pws.unkillmini.Program.backbone.*;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Matrix2b;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector2f;
 import io.github.pws.unkillmini.Program.rendering.Window;
-import io.github.pws.unkillmini.Scripts.World.PlayableArea;
 
-public class Player extends Script
+public abstract class Player
 {
-    public Sprite spr = new Sprite();
-    public String pixel = "ø";
-    private PlayableArea area = new PlayableArea();
-    private Vector2 direction = new Vector2();
+    public Sprite spr;
+    public Vector2f globalPosition;
+    public float moveSpeed;
+    public Matrix2b motionMatrix;
+    String collisionMask = "# M D G";
     public Player()
     {
-        Manager.addScript(this);
+        this.create();
     }
-    
-    @Override
-    public void start() 
+
+    public void handleCollisions()
     {
-        spr.pixels = pixel;
-        spr.pos.x = 0;
-        spr.pos.y = 0;
-        spr.foreground = Color.rgbFG(255, 10, 10);
-        spr.background = Color.rgbBG(120, 10, 10);
+        if(this.spr.position.x >= 1 && this.spr.position.y >= 1)
+        {
+            String[] mask = collisionMask.split(" ");
+            this.motionMatrix = Matrix2b.True();
 
-        area.start();
-        area.myPlayers.add(this);
+            for (String s : mask) {
+                if (Window.pixels[this.spr.position.y - 1][this.spr.position.x] == s.charAt(0))
+                    this.motionMatrix.y1 = false;
+                if (Window.pixels[this.spr.position.y + 1][this.spr.position.x] == s.charAt(0))
+                    this.motionMatrix.y2 = false;
+                if (Window.pixels[this.spr.position.y][this.spr.position.x - 1] == s.charAt(0))
+                    this.motionMatrix.x1 = false;
+                if (Window.pixels[this.spr.position.y][this.spr.position.x + 1] == s.charAt(0))
+                    this.motionMatrix.x2 = false;
+            }
+        }
     }
 
-    boolean prevPrs = false;
-    boolean sprt = false;
-    @Override
-    public void update() 
+    public void handleInput()
     {
-        area.update();
+        float spd = moveSpeed * (float)Manager.time.deltaTime;
 
-        sprt = Application.input.isHeld("Sprint");
+        if(Manager.input.isHeld("Sprint")) spd = moveSpeed * 2 * (float)Manager.time.deltaTime;
 
-        if(Application.input.isPressed("Move Forward")) prevPrs = true;
-        else if(Application.input.isReleased("Move Forward")) prevPrs = false;
-
-        if(sprt) Window.print("Sprinting!");
-        if(prevPrs)
-            Window.print("Forward Pressed");
-        else
-            Window.print("Forward Released");
+        if(Manager.input.isHeld("Move Forward")) this.globalPosition.y+= spd;
+        if(Manager.input.isHeld("Move Backward")) this.globalPosition.y-= spd;
+        if(Manager.input.isHeld("Move Left")) this.globalPosition.x+= spd * 2;
+        if(Manager.input.isHeld("Move Right")) this.globalPosition.x-= spd * 2;
     }
 
-    @Override
-    public void end() 
-    {
-        area.end();
-    }
-
-    private void handleInput()
-    {
-        
-    }
+    public abstract void create();
 }

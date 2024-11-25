@@ -5,12 +5,12 @@ import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Assets.Sprites.spr_inventory;
 import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Item;
-import io.github.pws.unkillmini.Program.backbone.MiniUtils;
+import io.github.pws.unkillmini.Program.backbone.Toolbox;
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.rendering.Window;
 import io.github.pws.unkillmini.Program.backbone.Sprite;
-import io.github.pws.unkillmini.Program.backbone.Vector2;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector2;
 import io.github.pws.unkillmini.Assets.Items;
 
 import java.util.ArrayList;
@@ -19,31 +19,26 @@ import java.util.List;
 public class Inventory extends UI
 {
     public static boolean open;
+    private static final float scrollSpeed = 30.0f;
+    private static final Sprite spr = new spr_inventory();
+
     private static int itemPage = 0;
-    private static int itemCursor = 0;
-    private static String[][] ray;
-    private static spr_inventory spr = new spr_inventory();
-    
+    private static float itemCursor = 0;
+
     public static List<Item> items = new ArrayList<>();
-    
-    public Inventory()
-    {
-        Manager.addScript(this);
-    }
 
     @Override
     public void start() 
     {
         items = Items.list;
-        Application.input.addMapping(NativeKeyEvent.VC_E, "Inventory");
+        Manager.input.addMapping(NativeKeyEvent.VC_E, "Inventory");
     }
 
-    int tempEnterCount;
     @Override
     public void update() 
     {
         int pageCount = (items.toArray().length/12) + 1;
-        int max = items.toArray().length - (itemPage * 12);
+        int max = (int) (items.toArray().length - (itemPage * 12));
         if (itemPage < pageCount -1) max = 12;
         if(max == 1 && itemPage > 0) itemPage--;
         /*
@@ -128,7 +123,7 @@ public class Inventory extends UI
         }
         */
 
-        if(Application.input.isPressed("Inventory"))
+        if(Manager.input.isPressed("Inventory"))
         {
             open = !open;
             if(open) addNewFocus("inv");
@@ -136,32 +131,20 @@ public class Inventory extends UI
         }
 
         inputMap:
-        if(open && prevFocused[0] == "inv")
+        if(open && prevFocused[0].equals("inv"))
         {
-            if(Application.input.isPressed("Up"))
-            {
-                itemCursor--;
-            }
-            else if(Application.input.isPressed("Down"))
-            {
-                itemCursor++;
-            }
-            else if(Application.input.isPressed("Left"))
-            {
-                itemPage--;
-            }
-            else if(Application.input.isPressed("Right"))
-            {
-                itemPage++;
-            }
-            else if(Application.input.isPressed("Enter"))
+            if(Manager.input.isPressed("Up"))           itemCursor--;
+            else if(Manager.input.isPressed("Down"))    itemCursor++;
+            else if(Manager.input.isPressed("Left"))    itemPage--;
+            else if(Manager.input.isPressed("Right"))   itemPage++;
+            else if(Manager.input.isPressed("Enter"))
             {
                 if(items.toArray().length == 0)
                     break inputMap;
 
-                int itemIndex = (itemPage * 12) + itemCursor;
+                int itemIndex = (int) ((itemPage * 12) + itemCursor);
                 Item it = items.get(itemIndex);
-                if(it.stats.equipmentSlots.equals(""))
+                if(it.stats.equipmentSlots.isEmpty())
                 {
                     it.runner.update();
                     it.stats.count--;
@@ -214,11 +197,11 @@ public class Inventory extends UI
         
         items = temp;
 
-        itemPage = MiniUtils.ClampInt(itemPage, 0, pageCount);
-        itemCursor = MiniUtils.ClampInt(itemCursor, 0, max);
+        itemPage = Toolbox.ClampInt(itemPage, 0, pageCount);
+        itemCursor = Toolbox.ClampFloat(itemCursor, 0, max);
         
-        spr.pos.x = 1;
-        spr.pos.y = 28;
+        spr.position.x = 1;
+        spr.position.y = 28;
         spr.background = Color.rgbBG(126, 167, 168);
         
         if(open)
@@ -227,7 +210,7 @@ public class Inventory extends UI
             spr.foreground = Color.rgbFG(255, 255, 255);
             spr.populate();
             
-            spr.pos.y = 12;
+            spr.position.y = 12;
             spr.pixels = spr_inventory.invBoder;
             spr.populate();
             
@@ -251,17 +234,17 @@ public class Inventory extends UI
         int pageCount = items.toArray().length/12;
         int max = items.toArray().length - (itemPage * 12);
         if (itemPage < pageCount)max = 12;
-        
+        char[][] ray;
+
         for (int i = 0; i < max; i++)
         {
             Item item = items.get((itemPage * 12) + i);
             ray = Sprite.PopulateWith(item.stats.count + " " + item.name);
 
-            String select = "                    ";
-            if(i == itemCursor)
-                Window.populateBackground(Sprite.PopulateWith(select), new Vector2(2, 14 + i), Color.rgbBG(139, 195, 196));
+            if(i == Math.round(itemCursor))
+                Window.populateBackground(Color.rgbBG(139, 195, 196), new Vector2(2, 14 + i),new Vector2(20,1));
 
-            Window.populateWithPixels(ray, new Vector2(3, 14 + i));
+            Window.populatePixels(ray, new Vector2(3, 14 + i));
         }
         
         if (pageCount == 0) 
@@ -280,7 +263,7 @@ public class Inventory extends UI
             ray = Sprite.PopulateWith("| <<   page  "+ (itemPage + 1) +"    >> |");
         }
         
-        Window.populateWithPixels(ray, new Vector2(1, 26));
+        Window.populatePixels(ray, new Vector2(1, 26));
     }
     
     public static void AddItem(Item it)
@@ -293,7 +276,5 @@ public class Inventory extends UI
                 it.stats.count += i.stats.count;
             }
         }
-        
-        items = temp;
     }
 }

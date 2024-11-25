@@ -2,7 +2,7 @@ package io.github.pws.unkillmini.Program.rendering;
 
 import io.github.pws.unkillmini.Program.backbone.Script;
 
-public class UI extends Script
+public class UI implements Script
 {
     public static String[] prevFocused = new String[10];
     @Override

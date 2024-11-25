@@ -2,59 +2,37 @@ package io.github.pws.unkillmini.Scripts.UI;
 
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
-import io.github.pws.unkillmini.Program.Manager;
-import io.github.pws.unkillmini.Program.backbone.Script;
-public class MakeBorder extends Script
-{   
-    private String[][] border;
-    
-    public MakeBorder()
-    {
-        Manager.addScript(this);
-    }
 
-    @Override
-    public void start()
-    {
-    }
+public class MakeBorder
+{
 
-    @Override
-    public void update()
+    public void createBorder()
     {
-        generateBorder(Window.width, 32);
-        for (int xx = 0; xx < border.length; xx++) 
+        for (int yy = 0; yy < Window.height; yy++)
         {
-            for (int yy = 0; yy < border[xx].length; yy++) 
+            for (int xx = 0; xx < Window.width; xx++)
             {
-                if(border[xx][yy] == "#")
+                if(!(yy > 0 && yy < Window.height-1 && xx > 0 && xx < Window.width -1))
                 {
-                    Window.pixels[xx][yy] = "#";
-                    Window.pixelsForeground[xx][yy] = Color.rgbFG(184, 214, 214);
-                    Window.pixelsBackground[xx][yy] = Color.rgbBG(126, 167, 168);
+                    Window.pixels[yy][xx] = '#';
+                    Window.backgroundColors[yy][xx] = Color.rgbBG(126, 167, 168);
+                    Window.foregroundColors[yy][xx] = Color.rgbFG(184, 214, 214);
                 }
             }
         }
     }
 
-    @Override
-    public void end()
+    public void createBackgorund()
     {
-    }
-
-    public final void generateBorder(int width, int height)
-    {
-        border = new String[height][width];
-        for (int yy = 0; yy < height; yy++)
+        for (int yy = 0; yy < Window.height; yy++)
         {
-            for (int xx = 0; xx < width; xx++) 
+            for (int xx = 0; xx < Window.width; xx++)
             {
-                if(yy > 0 && yy < height-1 && xx > 0 && xx < width -1)
+                if(yy > 0 && yy < Window.height-1 && xx > 0 && xx < Window.width -1)
                 {
-                    border[yy][xx] = " ";
-                }
-                else
-                {
-                    border[yy][xx] = "#";
+                    Window.pixels[yy][xx] = ' ';
+                    Window.backgroundColors[yy][xx] = Window.defaultBackground;
+                    Window.foregroundColors[yy][xx] = Window.defaultForeground;
                 }
             }
         }

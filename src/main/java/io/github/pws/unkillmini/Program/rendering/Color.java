@@ -1,7 +1,7 @@
 package io.github.pws.unkillmini.Program.rendering;
 
-import io.github.pws.unkillmini.Program.backbone.MiniUtils;
-import io.github.pws.unkillmini.Program.backbone.Vector3;
+import io.github.pws.unkillmini.Program.backbone.Toolbox;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector3;
 
 public class Color {
     /**
@@ -32,20 +32,9 @@ public class Color {
      */
     public static Vector3 clampClolors(int r, int g, int b)
     {
-        r = MiniUtils.ClampInt(r, 0, 255);
-        g = MiniUtils.ClampInt(g, 0, 255);
-        b = MiniUtils.ClampInt(b, 0, 255);
+        r = Toolbox.ClampInt(r, 0, 255);
+        g = Toolbox.ClampInt(g, 0, 255);
+        b = Toolbox.ClampInt(b, 0, 255);
         return new Vector3(r,g,b);
-    }
-
-    /**
-     * @return the clamped values of the given {@link Vector3} between 0 and 255 as a Vector3.
-     */
-    public static Vector3 clampClolors(Vector3 color)
-    {
-        color.x = MiniUtils.ClampInt(color.x, 0, 255);
-        color.y = MiniUtils.ClampInt(color.y, 0, 255);
-        color.z = MiniUtils.ClampInt(color.z, 0, 255);
-        return color;
     }
 }

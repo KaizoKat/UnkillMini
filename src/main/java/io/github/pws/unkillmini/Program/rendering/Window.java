@@ -1,175 +1,243 @@
 package io.github.pws.unkillmini.Program.rendering;
 
-import java.io.IOException;
-
-import io.github.pws.unkillmini.Program.backbone.Sprite;
-import io.github.pws.unkillmini.Program.backbone.Vector2;
+import io.github.pws.unkillmini.Program.Manager;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector2;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 
-public class Window
-{
+import java.io.IOException;
+
+public class Window {
     public static final int width = 120;
     public static final int height = 32;
-    public static final int extend = 4;
-    public static final String apkName = "Unkill Mini";
-    public static String defaultBackground = Color.rgbBG(15, 0, 3);
-    public static String defaultForeground = Color.rgbFG(255, 255, 255);
+    public static final String apkName = "Unkillable Mini";
 
-    public static String[][] pixels;
-    public static String[][] pixelsForeground;
-    public static String[][] pixelsBackground;
-    
-    private static String suffix = "";
+    public static final char[][] pixels = new char[height][width];
+    public static final String[][] foregroundColors = new String[height][width];
+    public static final String[][] backgroundColors = new String[height][width];
+
+    public static final String defaultBackground = Color.rgbBG(15, 0, 3);
+    public static final String defaultForeground = Color.rgbFG(255, 255, 255);
+
+    private static final char EMPTY_PIXEL = ' ';
     private static Terminal terminal;
+
     private static Vector2 terminalSize = new Vector2();
+    private static String footer = "";
 
     /**
-     * Creates the Window
+     * Initializes the terminal and window buffers.
      */
     public static void create()
     {
-        try {terminal = TerminalBuilder.builder().system(true).build();
-        } catch (IOException e) { throw new RuntimeException(e);}
+        try {
+            terminal = TerminalBuilder.builder().system(true).build();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to initialize terminal", e);
+        }
 
-        setWindowsTitle(apkName);
-        pixels = new String[height][width];
-        pixelsForeground = new String[height][width];
-        pixelsBackground = new String[height][width];
+        setWindowTitle(apkName);
+        clearBuffers();
     }
 
     /**
-     * Initializes all the 2d pixel arrays with empty strings.
+     * Clears all buffers and resets pixel data.
      */
-    public static void compose()
+    private static void clearBuffers()
     {
-        for (int yy = 0; yy < height; yy++)
+        for (int y = 0; y < height; y++)
         {
-            for (int xx = 0; xx < width; xx++)
+            for (int x = 0; x < width; x++)
             {
-                pixels[yy][xx] = "";
-                pixelsForeground[yy][xx] = "";
-                pixelsBackground[yy][xx] = "";
+                pixels[y][x] = EMPTY_PIXEL;
+                foregroundColors[y][x] = defaultForeground;
+                backgroundColors[y][x] = defaultBackground;
             }
         }
     }
 
     /**
-     * A necesary function that needs to be ran at the end before drawing the pixels to the screen.
-     * Sets all the remaining values of the pixel arrays to their equivalent empty chacacters.
-     */
-    public static void fillBlanks()
-    {
-        for (int yy = 0; yy < height; yy++)
-        {
-            for (int xx = 0; xx < width; xx++)
-            {
-                if(pixels[yy][xx].isEmpty()) pixels[yy][xx] = " ";
-                if(pixelsForeground[yy][xx].isEmpty()) pixelsForeground[yy][xx] = defaultForeground;
-                if(pixelsBackground[yy][xx].isEmpty()) pixelsBackground[yy][xx] = defaultBackground;
-            }
-        }
-    }
-
-    /**
-     * Populates the pixel array with the populator at the position
-     * @param populator the 2d array that will fill the pixel array
-     * @param pos the position offset at which the pixel array will be filled at.
-     */
-    public static void populateWithPixels(String[][] populator, Vector2 pos)
-    {
-        for (int yy = 0; yy < populator.length; yy++)
-        {
-            for (int xx = 0; xx < populator[yy].length; xx++)
-            {
-                if(pos.x < 0) pos.x = 0;
-                if(pos.y < 0) pos.y = 0;
-                pixels[pos.y + yy][pos.x + xx] = populator[yy][xx];
-            }
-        }
-    }
-
-    /**
-     * Populates the foreground pixel array with the populator at the position
-     * @param populator the 2d array that will fill the foreground pixel array
-     * @param pos the position offset at which the pixel foreground array will be filled at.
-     */
-    public static void populateForeground(String[][] populator, Vector2 pos, String color)
-    {
-        for (int yy = 0; yy < populator.length; yy++)
-        {
-            for (int xx = 0; xx < populator[yy].length; xx++)
-            {
-                if(pos.x < 0) pos.x = 0;
-                if(pos.y < 0) pos.y = 0;
-                pixelsForeground[pos.y + yy][pos.x + xx] = color;
-            }
-        }
-    }
-
-    /**
-     * Populates the background pixel array with the populator at the position
-     * @param populator the 2d array that will fill the background pixel array
-     * @param pos the position offset at which the pixel background array will be filled at.
-     */
-    public static void populateBackground(String[][] populator, Vector2 pos, String color)
-    {
-        for (int yy = 0; yy < populator.length; yy++)
-        {
-            for (int xx = 0; xx < populator[yy].length; xx++)
-            {
-                if(pos.x < 0) pos.x = 0;
-                if(pos.y < 0) pos.y = 0;
-                pixelsBackground[pos.y + yy][pos.x + xx] = color;
-            }
-        }
-    }
-
-    /**
-     * displays the created window to the terminal
+     * Draws the screen by flushing all buffers to the terminal.
      */
     public static void draw()
     {
-        fillBlanks();
         fixConsoleOnResize();
+        terminal.writer().write("\033[?7l");
 
-        StringBuilder sb = new StringBuilder();
-        System.out.print("\033[0;0H");
-        String[][] suffix2D = Sprite.PopulateWith(suffix);
-
-        for (int yy = 0; yy < height + extend; yy++)
+        StringBuilder output = new StringBuilder("\033[0;0H"); // Move cursor to top-left
+        String[] footerLines = footer.split("<br>");
+        for (int y = 0; y < height + footerLines.length; y++)
         {
-            for (int xx = 0; xx < width; xx++)
+            for (int x = 0; x < width; x++)
             {
-                if(yy < height)
+                if (y < height)
                 {
-                    if(pixels[yy][xx] == null) pixels[yy][xx] = "␀";
-                    sb.append(pixelsForeground[yy][xx]).append(pixelsBackground[yy][xx]).append(pixels[yy][xx]);
+                    output.append(foregroundColors[y][x])
+                            .append(backgroundColors[y][x])
+                            .append(pixels[y][x]);
                 }
                 else
                 {
-                    sb.append(defaultForeground).append(defaultBackground);
-                    if(!suffix.isEmpty() && yy - height < suffix2D.length && xx < suffix2D[yy - height].length)
-                    {
-                        sb.append(suffix2D[yy - height][xx]);
-                    }
-                    else
-                        sb.append(" ");
+                    output.append(defaultForeground)
+                            .append(defaultBackground)
+                            .append(x < footerLines[y-height].length() ? footerLines[y-height].charAt(x) : EMPTY_PIXEL);
                 }
             }
-            sb.append(Color.RESET);
-            
-            if(yy != height + extend -1)
-                sb.append("\n");
+            output.append("\033[0m\n"); // Reset color and newline
         }
 
-        System.out.print(sb.toString());
-        suffix = "";
-        System.out.flush();
+        footer = ""; // Reset footer
+        terminal.writer().write(output.toString());
+        terminal.writer().flush();
     }
 
     /**
-     * copletely clears the terminal from its characters.
+     * Removes all the '_' characters from the screen.
+     * usefull for anything that needs generating that has empty space in the sprite.
+     */
+    public static void removeScaffolding()
+    {
+        for (int yy = 0; yy < Window.height; yy++)
+        {
+            for (int xx = 0; xx < Window.width; xx++)
+            {
+                if (Window.pixels[yy][xx] == '¬')
+                {
+                    Window.pixels[yy][xx] = ' ';
+                    Window.backgroundColors[yy][xx] = defaultBackground;
+                    Window.foregroundColors[yy][xx] = defaultForeground;
+                }
+            }
+        }
+    }
+
+    /**
+     * Clears the terminal screen using ANSI escape codes.
+     */
+    private static void clearScreen()
+    {
+        System.out.print("\033[2J\033[H"); // Clear screen and move cursor to top-left
+    }
+
+    /**
+     * Populates a section of the pixel buffer with the provided data.
+     *
+     * @param source 2D array of characters to populate
+     * @param pos    Starting position in the buffer
+     */
+    public static void populatePixels(char[][] source, Vector2 pos)
+    {
+        for (int y = 0; y < source.length; y++)
+        {
+            for (int x = 0; x < source[y].length; x++)
+            {
+                int targetX = pos.x + x;
+                int targetY = pos.y + y;
+                if (isWithinBounds(targetX, targetY))
+                {
+                    pixels[targetY][targetX] = source[y][x];
+                }
+            }
+        }
+    }
+
+    /**
+     * Populates the foreground color buffer.
+     *
+     * @param color Color to apply
+     * @param pos   Starting position
+     * @param size  Size of the region
+     */
+    public static void populateForeground(String color, Vector2 pos, Vector2 size)
+    {
+        for (int y = 0; y < size.y; y++)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                int targetX = pos.x + x;
+                int targetY = pos.y + y;
+                if (isWithinBounds(targetX, targetY))
+                {
+                    foregroundColors[targetY][targetX] = color;
+                }
+            }
+        }
+    }
+
+    /**
+     * Populates the background color buffer.
+     *
+     * @param color Color to apply
+     * @param pos   Starting position
+     * @param size  Size of the region
+     */
+    public static void populateBackground(String color, Vector2 pos, Vector2 size)
+    {
+        for (int y = 0; y < size.y; y++)
+        {
+            for (int x = 0; x < size.x; x++)
+            {
+                int targetX = pos.x + x;
+                int targetY = pos.y + y;
+                if (isWithinBounds(targetX, targetY))
+                {
+                    backgroundColors[targetY][targetX] = color;
+                }
+            }
+        }
+    }
+
+    /**
+     * Checks if the given position is within the buffer bounds.
+     */
+    private static boolean isWithinBounds(int x, int y)
+    {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    /**
+     * Sets a footer message to be displayed below the main window.
+     */
+    public static void print(String message)
+    {
+        footer += message + "<br>";
+    }
+
+    /**
+     * Sets the terminal title.
+     */
+    public static void setWindowTitle(String title)
+    {
+        System.out.print("\033]0;" + title + "\007");
+    }
+
+    /**
+     * Hides the terminal cursor.
+     */
+    public static void hideCursor()
+    {
+        System.out.print("\033[?25l");
+    }
+
+    /**
+     * Shows the terminal cursor.
+     */
+    public static void showCursor()
+    {
+        System.out.print("\033[?25h");
+    }
+
+    /**
+     * Pauses terminal execution until a key is pressed.
+     */
+    public static void pause()
+    {
+        try { new ProcessBuilder("cmd", "/c", "PAUSE").inheritIO().start().waitFor();
+        } catch (IOException | InterruptedException ignored) {}
+    }
+
+    /**
+     * Completely clears the terminal from its characters.
      */
     public static void clear()
     {
@@ -178,58 +246,23 @@ public class Window
     }
 
     /**
-     * pauses terminal execution until a key is pressed.
+     * Completely kills all program execution.
      */
-    public static void pause()
+    public static void kill()
     {
-        try { new ProcessBuilder("cmd", "/c", "PAUSE").inheritIO().start().waitFor();  
-        } catch (IOException | InterruptedException ignored) {}
+        Manager.run = false;
     }
 
-    /**
-     * prints like the Syste.out.println to the botton of the screen (gets cleared next frame)
-     * @param _suffix the string that will be printed
-     */
-    public static void print(String _suffix)
-    {
-        suffix += _suffix + "\n";
-    }
 
     /**
-     * hides the terminal cursor.
-     */
-    public static void hideCursor()
-    {
-        System.out.print("\033[?25l");
-    }
-
-    /**
-     * shows the terminal cursor.
-     */
-    public static void showCursor() 
-    {
-        System.out.print("\033[?25h");
-    }
-
-    /**
-     * shows the terminal cursor.
+     * Shows the terminal cursor.
      */
     public static void fixConsoleOnResize()
     {
         if(terminalSize.x != terminal.getWidth() || terminalSize.y != terminal.getHeight())
+        {
             clear();
-
+        }
         terminalSize = new Vector2(terminal.getWidth(), terminal.getHeight());
-    }
-
-    /**
-     * sets the title of the terminal (slow).
-     * @param title the string the title will be set to.
-     */
-    public static void setWindowsTitle(String title) 
-    {
-        try { new ProcessBuilder("cmd", "/c", "title " + title).inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException ignored) {}
-
     }
 }

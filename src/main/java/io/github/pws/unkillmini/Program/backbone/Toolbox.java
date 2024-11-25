@@ -1,6 +1,6 @@
 package io.github.pws.unkillmini.Program.backbone;
 
-public class MiniUtils 
+public class Toolbox
 {
 
     /**
@@ -17,6 +17,23 @@ public class MiniUtils
         else if(var < min) 
             var = min;
         
+        return var;
+    }
+
+    /**
+     * Clamps the given variable between min (inclusive) and max (exclusive).
+     * @param var The variable to clamp.
+     * @param min The minimun value of the variable.
+     * @param max The maximum variable of the variable exclusive (max - 1).
+     * @return Returns the clamped variable.
+     */
+    public static float ClampFloat(float var, float min, float max)
+    {
+        if(var > max -1)
+            var = max -1;
+        else if(var < min)
+            var = min;
+
         return var;
     }
 

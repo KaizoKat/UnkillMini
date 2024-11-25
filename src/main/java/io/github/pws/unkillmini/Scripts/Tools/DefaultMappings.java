@@ -6,26 +6,23 @@ import io.github.pws.unkillmini.Program.Manager;
 import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Script;
 
-public class DefaultMappings extends Script
+public class DefaultMappings implements Script
 {
-    public DefaultMappings()
-    {
-        Manager.addScript(this);
-    }
-
     @Override
     public void start()
     {
-        Application.input.addMapping(NativeKeyEvent.VC_W, "Move Forward");
-        Application.input.addMapping(NativeKeyEvent.VC_S, "Move Backward");
-        Application.input.addMapping(NativeKeyEvent.VC_A, "Move Left");
-        Application.input.addMapping(NativeKeyEvent.VC_D, "Move Right");
-        Application.input.addMapping(NativeKeyEvent.VC_SHIFT, "Sprint");
+        Manager.input.addMapping(NativeKeyEvent.VC_W, "Move Forward");
+        Manager.input.addMapping(NativeKeyEvent.VC_S, "Move Backward");
+        Manager.input.addMapping(NativeKeyEvent.VC_A, "Move Left");
+        Manager.input.addMapping(NativeKeyEvent.VC_D, "Move Right");
+        Manager.input.addMapping(NativeKeyEvent.VC_SHIFT, "Sprint");
 
-        Application.input.addMapping(NativeKeyEvent.VC_UP, "Up");
-        Application.input.addMapping(NativeKeyEvent.VC_DOWN, "Down");
-        Application.input.addMapping(NativeKeyEvent.VC_LEFT, "Left");
-        Application.input.addMapping(NativeKeyEvent.VC_RIGHT, "Right");
+        Manager.input.addMapping(NativeKeyEvent.VC_UP, "Up");
+        Manager.input.addMapping(NativeKeyEvent.VC_DOWN, "Down");
+        Manager.input.addMapping(NativeKeyEvent.VC_LEFT, "Left");
+        Manager.input.addMapping(NativeKeyEvent.VC_RIGHT, "Right");
+
+        Manager.input.addMapping(NativeKeyEvent.VC_P, "testP");
     }
 
     @Override

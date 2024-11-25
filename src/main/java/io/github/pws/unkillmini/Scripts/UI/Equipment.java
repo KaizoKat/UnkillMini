@@ -8,9 +8,10 @@ import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Assets.Sprites.spr_equipment;
 import io.github.pws.unkillmini.Program.Manager;
-import io.github.pws.unkillmini.Program.backbone.Input;
 import io.github.pws.unkillmini.Program.backbone.Item;
-import io.github.pws.unkillmini.Program.backbone.MiniUtils;
+import io.github.pws.unkillmini.Program.backbone.Toolbox;
+import io.github.pws.unkillmini.Program.backbone.Sprite;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector2;
 import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.UI;
 import io.github.pws.unkillmini.Program.rendering.Window;
@@ -19,27 +20,23 @@ public class Equipment extends UI
 {
     public static boolean open;
     public static boolean charms = false;
-    public static Item[] equippedItems = new Item[7];
-    private static int slotIndex = 0;
-    private static spr_equipment spr = new spr_equipment();
+    private static final Sprite spr = new spr_equipment();
 
-    public Equipment()
-    {
-        Manager.addScript(this);
-    }
+    private static Vector2 dir = new Vector2(1,1);
+    public static Item[] equippedItems = new Item[7];
 
     @Override
     public void start() 
     {
-        Application.input.addMapping(NativeKeyEvent.VC_R, "Equipment");
+        Manager.input.addMapping(NativeKeyEvent.VC_R, "Equipment");
     }
 
     @Override
-    public void update() 
+    public void update()
     {
         //boolean larm = false, rarm = false, legs = false, chest = false, head = false, weapon = false;
         
-        if(Application.input.isPressed("Equipment"))
+        if(Manager.input.isPressed("Equipment"))
         {
             open = !open;
             if(open) addNewFocus("equ");
@@ -66,33 +63,48 @@ public class Equipment extends UI
                 Window.print("left arm, right arm, chest, legs, head, weapon and charms");
             */
         }
-        
-        if(open && prevFocused[0].equals("equ"))
-        {
-            if(Application.input.isPressed("Left") || Application.input.isPressed("Down"))
-                slotIndex++;
-            else if (Application.input.isPressed("Right") || Application.input.isPressed("Up"))
-                slotIndex--;
-        }
 
-        slotIndex = MiniUtils.ClampInt(slotIndex, 0, 7);
-
-        spr.pos.x = 23;
-        spr.pos.y = 28;
+        spr.position.x = 23;
+        spr.position.y = 28;
         spr.background = Color.rgbBG(126, 167, 168);
 
-        if(open)
+        if(open && prevFocused[0].equals("equ"))
         {
+            if(Manager.input.isPressed("Left"))
+            {
+                dir.x--;
+                if(dir.y == 0) dir.y = 1;
+            }
+            else if (Manager.input.isPressed("Right"))
+            {
+                dir.x++;
+                if(dir.y == 0) dir.y = 1;
+            }
+            else if(Manager.input.isPressed("Down"))
+            {
+                dir.y++;
+
+            }
+            else if(Manager.input.isPressed("Up"))
+            {
+                dir.y--;
+            }
+
+
+
+            dir.x = Toolbox.ClampInt(dir.x, 0,3);
+            dir.y = Toolbox.ClampInt(dir.y, 0,3);
+
             spr.pixels = spr_equipment.buttonPressed;
             spr.foreground = Color.rgbFG(255, 255, 255);
             spr.populate();
             
-            spr.pos.y = 5;
+            spr.position.y = 5;
             spr.pixels = spr_equipment.eqBorder;
             spr.populate();
             
-            spr.pos.x = 25;
-            spr.pos.y = 7;
+            spr.position.x = 25;
+            spr.position.y = 7;
             spr.pixels = spr_equipment.eqSlots;
             spr.foreground = Color.rgbFG(201, 212, 212);
             spr.populate();
@@ -104,7 +116,7 @@ public class Equipment extends UI
             String selectBG = Color.rgbBG(133, 185, 186);
             String selectFG = Color.rgbFG(255, 255, 255);
 
-            if(slotIndex == 1)
+            if(dir.x == 2 && dir.y == 1)
             {
                 String area =     
                 """
@@ -116,7 +128,7 @@ public class Equipment extends UI
                 selectArea(area, 65, 12, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[0], "left arm");
             }
-            else if(slotIndex == 2)
+            else if(dir.x == 0 && dir.y == 1)
             {
                 String area =
                 """
@@ -128,11 +140,10 @@ public class Equipment extends UI
                 selectArea(area, 27, 12, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[1], "right arm");
             }
-            else if(slotIndex == 3)
+            else if(dir.x == 1 && dir.y == 2)
             {
                 String area =
                 """
-                *%@@@#,   *%@@@#,
                 *%@@@#,   *%@@@#,
                 *%@@@#,   *%@@@#,
                 *%@@@#,   *%@@@#,
@@ -143,7 +154,7 @@ public class Equipment extends UI
                 selectArea(area, 45, 21, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[2], "legs");
             }
-            else if(slotIndex == 0)
+            else if(dir.x == 1 && dir.y == 1)
             {
                 String area =
                 """
@@ -160,7 +171,7 @@ public class Equipment extends UI
                 selectArea(area, 45, 12, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[3], "chest");
             }
-            else if(slotIndex == 4)
+            else if(dir.y == 0)
             {
                 String area =
                 """
@@ -173,7 +184,7 @@ public class Equipment extends UI
                 selectArea(area, 47, 7, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[4], "head");
             }
-            else if(slotIndex == 5)
+            else if(dir.x == 2 && dir.y == 2)
             {
                 String area =
                 "           /&%*\n"+
@@ -187,7 +198,7 @@ public class Equipment extends UI
                 selectArea(area, 67, 18, cBor, borderBG, borderFG, selectBG, selectFG);
                 appendCheck(equippedItems[5], "weapon");
             }
-            else if(slotIndex == 6)
+            else if(dir.x == 0 && dir.y == 2)
             {
                 String area =
                 "     *%&/     \n"+
@@ -247,11 +258,11 @@ public class Equipment extends UI
             Color.rgbBG(133, 185, 186), Color.rgbFG(0, 0, 0), 
             Color.rgbBG(133, 185, 186), Color.rgbFG(255, 255, 255));
             /*
-            it will add the item into an list of totems that works like the inventory items when the command is done.
-            it will print an inventory right in the middle of the exquipment tab and will work just like the inventory,
+            it will add the item into a list of totems that works like the inventory items when the command is done.
+            it will print an inventory right in the middle of the equipment tab and will work just like the inventory,
             except with other commands and wi stay on as long as that command is not "eq. ch. totems" or another ch command
             */
-            if(slotIndex == 6)
+            if(dir.equals(new Vector2(0,2)))
             {
                 
             }
@@ -284,11 +295,11 @@ public class Equipment extends UI
                 {
                     lamda[s] += String.valueOf(cBor);
                 }
-                lamda[s] += String.valueOf(cBor)+"\n";
+                lamda[s] += cBor +"\n";
             }
             else
             {
-                lamda[s] = String.valueOf(cBor) + temp[s-1] + String.valueOf(cBor) + "\n";
+                lamda[s] = cBor + temp[s-1] + cBor + "\n";
             }
         }
         
@@ -297,15 +308,15 @@ public class Equipment extends UI
         
         spr.background = borderBG;
         spr.foreground = borderFG;
-        spr.pos.x = poX-1;
-        spr.pos.y = poY-1;
+        spr.position.x = poX-1;
+        spr.position.y = poY-1;
         spr.pixels = sb.toString();
         spr.populate();
         
         spr.background = selectBG;
         spr.foreground = selectFG;
-        spr.pos.x = poX;
-        spr.pos.y = poY;
+        spr.position.x = poX;
+        spr.position.y = poY;
         spr.pixels = area;
         spr.populate();
     }

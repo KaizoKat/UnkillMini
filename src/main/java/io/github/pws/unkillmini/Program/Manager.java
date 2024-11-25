@@ -5,108 +5,86 @@ import java.util.List;
 
 import io.github.pws.unkillmini.Application;
 import io.github.pws.unkillmini.Program.backbone.*;
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector2;
+import io.github.pws.unkillmini.Program.rendering.Color;
 import io.github.pws.unkillmini.Program.rendering.Window;
+import io.github.pws.unkillmini.Scripts.UI.MakeBorder;
 
 public class Manager 
 {
     public static List<Script> scripts = new ArrayList<>();
 
     public static final boolean displayFramerate = true;
-    public static final int targetFps = 120;
-
-    public static int framerate = 0;
-    public static final long optimalTime = 1_000_000_000 / targetFps;
+    public static final FramerateController time = new FramerateController();
+    public static final Input input = new Input();
 
     public static boolean run = true;
-    public static double delta;
 
-    public static void addScript(Script script)
-    {
-        scripts.add(script);
-    }
-
-    public static void startAll()
-    {
-        for (Script s : scripts)
-        {
-            s.start();
-        }
-    }
-
-    public static void endAll()
-    {
-        for (Script s : scripts)
-        {
-            s.end();
-        }
-    }
-
-    private static void updateAll()
-    {
-        for (Script s : scripts)
-        {
-            s.update();
-        }
-    }
+    private static final MakeBorder border = new MakeBorder();
 
     public static void loop()
-    {   
-        Window.compose();
-        startAll();
-
-        Window.fillBlanks();
-        Window.draw();
-
-        staticSettings();
-        long lastLoopTime = System.nanoTime();
+    {
+        boolean start = true;
 
         while (true)
         {
+            SceneManager.killProcessOnNoLoadedScene();
+            if(SceneManager.switchSceneOnCurrentChange())
+            {
+                start = true;
+                continue;
+            }
+
+            if(start)
+            {
+                SceneManager.startScene();
+                Window.draw();
+                staticSettings();
+                start = false;
+            }
+
             if (run)
             {
-                long now = System.nanoTime();
-                long updateLength = now - lastLoopTime;
-                lastLoopTime = now;
-                delta = updateLength / ((double) optimalTime);
+                input.processInputQueue();
 
+                border.createBackgorund();
+                SceneManager.updateScene();
 
-                Window.compose();
-                Application.input.processInputQueue();
+                FramerateController.FPSCounter.countFrame();
+                if (displayFramerate) displayFPS();
 
-                FPSCounter.countFrame();
-                framerate = FPSCounter.getCurrentFrameCount();
-                if(displayFramerate) displayFPS();
+                border.createBorder();
 
-                updateAll();
-
+                input.updateStates();
+                Window.removeScaffolding();
                 Window.draw();
-                Application.input.updateStates();
-                try {
 
-                    long gameTime = (lastLoopTime - System.nanoTime() + optimalTime) / 1_000_000;
-                    if (gameTime > 0) Thread.sleep(gameTime);
-                } catch (InterruptedException e) { e.printStackTrace(); }
-            }
-            else
-            {
-                endAll();
+                time.regulateFramerate();
+            } else {
+                SceneManager.endScene();
                 break;
             }
         }
     }
 
+
     private static void staticSettings()
     {
         Window.hideCursor();
+        int fps = 60;
+        time.setTargetFramerate(fps);
+        time.setVSync(false, fps);
     }
 
     private static void displayFPS()
     {
-        int currentRate = FPSCounter.getCurrentFrameCount();
+        int currentRate = FramerateController.FPSCounter.getCurrentFrameCount();
         String output = "FPS: N / A";
         if(currentRate != 0)
-            output = "FPS: " + currentRate + " / " + targetFps;
+            output = "FPS: " + currentRate + " / " + time.targetFramerate;
 
-        Window.populateWithPixels(Sprite.PopulateWith(output),new Vector2(2,1));
+        Window.populatePixels(Sprite.PopulateWith(output),new Vector2(2,1));
+        Window.populateForeground(Color.rgbFG(255,255,255),new Vector2(2,1), new Vector2(output.length(),1));
+        Window.populateBackground(Color.rgbBG(0,0,0),new Vector2(2,1), new Vector2(output.length(),1));
     }
 }

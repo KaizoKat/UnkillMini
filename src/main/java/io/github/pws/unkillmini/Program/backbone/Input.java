@@ -3,6 +3,7 @@ package io.github.pws.unkillmini.Program.backbone;
 import com.github.kwhat.jnativehook.GlobalScreen;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyEvent;
 import com.github.kwhat.jnativehook.keyboard.NativeKeyListener;
+import io.github.pws.unkillmini.Program.Manager;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -104,6 +105,26 @@ public class Input implements NativeKeyListener
             if (keyStates.getOrDefault(key, KeyState.none) == KeyState.released)
             {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if an action is held (true as long as the key is pressed).
+     * UNFUNCTIONAL!
+     * It will work like holding a key down on the keyboard in a normal text document.
+     */
+    public boolean isHeldDelayed(String action, float counterRef, float time)
+    {
+        List<Integer> keys = actionMappings.getOrDefault(action, Collections.emptyList());
+        for (int key : keys)
+        {
+            if (keyStates.getOrDefault(key, KeyState.none) == KeyState.held)
+            {
+                if(counterRef < time) counterRef += (float)Manager.time.deltaTime;
+                if(counterRef == 0 || counterRef >= time) return true;
+                else return false;
             }
         }
         return false;

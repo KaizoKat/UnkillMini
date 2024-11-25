@@ -6,12 +6,12 @@
 
     <groupId>io.github.pws.unkillmini</groupId>
     <artifactId>Aplication</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
     <packaging>pom</packaging>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <project.build.directory>${project.basedir}/bin</project.build.directory>
         <project.lib.directory>${project.basedir}/lib</project.lib.directory>
     </properties>
@@ -27,14 +27,14 @@
         <dependency>
             <groupId>com.github.kwhat</groupId>
             <artifactId>jnativehook</artifactId>
-            <version>2.2.2</version>
+            <version>2.2.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jline</groupId>
-            <artifactId>jline</artifactId>
-            <version>3.27.1</version>
-        </dependency>
+	<dependency>
+    		<groupId>org.jline</groupId>
+    		<artifactId>jline</artifactId>
+    		<version>3.27.1</version>
+	</dependency>
 
     </dependencies>
 

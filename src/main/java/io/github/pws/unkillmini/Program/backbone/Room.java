@@ -1,141 +1,154 @@
 package io.github.pws.unkillmini.Program.backbone;
 
+import io.github.pws.unkillmini.Program.backbone.DataTypes.Vector2;
 import io.github.pws.unkillmini.Program.rendering.Color;
-import io.github.pws.unkillmini.Program.rendering.Window;
 
 import java.util.Arrays;
 
-public class Room
-{
+public class Room {
     public Sprite spr = new Sprite();
+    public Vector2 startingPosition = new Vector2();
+    public Vector2 globalPosition = startingPosition;
     public char[][] roomMap;
     private int width = 3;
     private int height = 3;
     private String background = Color.rgbBG(0, 0, 0);
-    private String foreground = Color.rgbBG(255, 255, 255);
+    private String foreground = Color.rgbFG(255, 255, 255);
 
     /**
-     * Set the width of the room
-     * @param width min 3, max 128(unimplemented)
+     * Set the width of the room.
+     * @param width min 3
      */
-    public final void setWidth(int width)
-    {
-        this.width = Math.max(width,3);
+    public final void setWidth(int width) {
+        this.width = Math.max(width, 3);
     }
 
     /**
-     * Set height of the room
-     * @param height min 3 max 32(unimplemented)
+     * Set height of the room.
+     * @param height min 3
      */
-    public final void setHeight(int height)
-    {
-        this.height = Math.max(height,3);
+    public final void setHeight(int height) {
+        this.height = Math.max(height, 3);
     }
 
     /**
-     * Set the background color of the room
+     * Set the background color of the room.
      * @param color string from the Color class.
      */
-    public final void setBackground(String color)
-    {
+    public final void setBackground(String color) {
         this.background = color;
     }
 
     /**
-     * Set the foreground color of the room
+     * Set the foreground color of the room.
      * @param color string from the Color class.
      */
-    public final void setForeground(String color)
-    {
+    public final void setForeground(String color) {
         this.foreground = color;
     }
 
     /**
-     * Creates the room and prints it to the screen (supports negative positions)
+     * Creates the room and prints it to the screen (supports negative positions).
      */
-    public final void createRoom()
-    {
+    public final void createRoom() {
         StringBuilder sb = new StringBuilder();
 
-        for (int yy = 0; yy < roomMap.length; yy++)
-        {
-            if(this.spr.pos.y + yy > Window.height - 1) continue;
-
-            for (int xx = 0; xx < roomMap[yy].length; xx++)
-            {
-                if(this.spr.pos.x + xx > Window.width - 1) continue;
-                if(roomMap[yy][xx] == '#') sb.append("#");
-                else if(roomMap[yy][xx] == '.' || roomMap[yy][xx] == ':') sb.append(" ");
-                else sb.append(roomMap[yy][xx]);
+        for (int yy = 0; yy < roomMap.length; yy++) {
+            for (int xx = 0; xx < roomMap[yy].length; xx++) {
+                // Render the character or space
+                if (roomMap[yy][xx] == '.' || roomMap[yy][xx] == ':') {
+                    sb.append(" ");
+                } else {
+                    sb.append(roomMap[yy][xx]);
+                }
             }
+
             sb.append("\n");
         }
-        spr.pixels = sb.toString();
-        spr.background = this.background;
-        spr.foreground = this.foreground;
-        spr.populate();
+
+        // Assign the rendered room to the sprite
+        this.spr.pixels = sb.toString();
+        this.spr.background = this.background;
+        this.spr.foreground = this.foreground;
+        this.spr.position = this.globalPosition.add(this.startingPosition);
+        this.spr.populate();
     }
 
     /**
-     * Merges two rooms but doesn't support negative valyes for the second room yet.
-     * @param other the room that you waht this room to merge with.
-     * @return a new char 2d array of the newly merged room.
+     * Merges two rooms and supports negative positions for the second room.
+     * @param other The room to merge with.
+     * @return A new char[][] of the newly merged room.
      */
-    public final char[][] merge(Room other)
-    {
-        char[][] mergedRoom = new char[32][128];
+    public final char[][] merge(Room other) {
+        // Determine bounds of the merged room
+        int mergedStartX = Math.min(0, other.startingPosition.x);
+        int mergedStartY = Math.min(0, other.startingPosition.y);
 
-        for (char[] chars : mergedRoom)
-        {
-            Arrays.fill(chars, ' ');
+        int mergedEndX = Math.max(this.width, other.startingPosition.x + other.width);
+        int mergedEndY = Math.max(this.height, other.startingPosition.y + other.height);
+
+        int mergedWidth = mergedEndX - mergedStartX;
+        int mergedHeight = mergedEndY - mergedStartY;
+
+        // Create merged room map
+        char[][] mergedRoom = new char[mergedHeight][mergedWidth];
+        for (char[] row : mergedRoom) {
+            Arrays.fill(row, '¬');
         }
 
-        for (int yy = 0; yy < this.height; yy++)
-            for (int xx = 0; xx < this.width; xx++)
-                mergedRoom[yy][xx] = this.roomMap[yy][xx];
+        // Copy this room into the merged map
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                int targetX = x - mergedStartX;
+                int targetY = y - mergedStartY;
+                mergedRoom[targetY][targetX] = this.roomMap[y][x];
+            }
+        }
 
-        for (int yy = 0; yy < other.height; yy++)
-            for (int xx = 0; xx < other.width; xx++)
-                mergedRoom[Math.max(yy + other.spr.pos.y, yy)][Math.max(xx + other.spr.pos.x, xx)] = other.roomMap[yy][xx];
-        
-        for (int yy = 1; yy < 31; yy++)
-        {
-            for (int xx = 1; xx < 127; xx++)
-            {
-                int nrDots = 0;
-                if(mergedRoom[yy-1][xx] == '.') nrDots++;
-                if(mergedRoom[yy+1][xx] == '.') nrDots++;
-                if(mergedRoom[yy][xx-1] == '.') nrDots++;
-                if(mergedRoom[yy][xx+1] == '.') nrDots++;
+        // Copy other room into the merged map
+        for (int y = 0; y < other.height; y++) {
+            for (int x = 0; x < other.width; x++) {
+                int targetX = x + other.startingPosition.x - mergedStartX;
+                int targetY = y + other.startingPosition.y - mergedStartY;
 
-                if(nrDots >= 2 && mergedRoom[yy][xx] == '#')
-                {
-                    mergedRoom[yy][xx] = ':';
+                if (mergedRoom[targetY][targetX] == '¬') {
+                    mergedRoom[targetY][targetX] = other.roomMap[y][x];
                 }
             }
         }
 
+        // Smooth the merged room (example logic for adjusting details)
+        for (int y = 1; y < mergedHeight - 1; y++) {
+            for (int x = 1; x < mergedWidth - 1; x++) {
+                int dotCount = 0;
+                if (mergedRoom[y - 1][x] == '.') dotCount++;
+                if (mergedRoom[y + 1][x] == '.') dotCount++;
+                if (mergedRoom[y][x - 1] == '.') dotCount++;
+                if (mergedRoom[y][x + 1] == '.') dotCount++;
+
+                if (dotCount >= 2 && mergedRoom[y][x] == '#') {
+                    mergedRoom[y][x] = ':';
+                }
+            }
+        }
+
+        this.width = mergedWidth;
+        this.height = mergedHeight;
         return mergedRoom;
     }
 
     /**
-     * Generates the base room map
+     * Generates the base room map.
      */
-    public final void generateRoomMap()
-    {
+    public final void generateRoomMap() {
         roomMap = new char[this.height][this.width];
 
-        for (int yy = 0; yy < this.height; yy++)
-        {
-            for (int xx = 0; xx < this.width; xx++)
-            {
-                if(yy > 0 && yy < this.height-1 && xx > 0 && xx < this.width -1)
-                {
-                    roomMap[yy][xx] = '.';
-                }
-                else
-                {
-                    roomMap[yy][xx] = '#';
+        for (int y = 0; y < this.height; y++) {
+            for (int x = 0; x < this.width; x++) {
+                if (y > 0 && y < this.height - 1 && x > 0 && x < this.width - 1) {
+                    roomMap[y][x] = '.';
+                } else {
+                    roomMap[y][x] = '#';
                 }
             }
         }
